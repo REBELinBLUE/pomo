@@ -1,70 +1,66 @@
 <template>
-  <vs-row>
-    <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
-      <vs-alert vs-active="true" :vs-color="color">
-        <vs-progress :vs-height="8" :vs-percent="percentage" :vs-color="color" />
+  <vs-alert vs-active="true" :vs-color="color">
+    <vs-progress :vs-height="8" :vs-percent="percentage" :vs-color="color" />
 
-        <vs-row id="stats">
-          <vs-col vs-type="flex"
-                  vs-justify="flex-start"
-                  vs-align="center"
-                  vs-w="6">
-            <h2>{{ label }}</h2>
-          </vs-col>
-          <vs-col vs-type="flex"
-                  vs-justify="flex-end"
-                  vs-align="center"
-                  vs-w="6">
-            <vs-chip vs-color="success"
-                     vs-icon="check_circle">
-              Completed: {{ completed }}/{{ target }}
-            </vs-chip>
-            <vs-chip vs-color="danger"
-                     vs-icon="error">
-              Interruptions: {{ failed }}
-            </vs-chip>
-          </vs-col>
-        </vs-row>
+    <vs-row id="stats">
+      <vs-col vs-type="flex"
+              vs-justify="flex-start"
+              vs-align="center"
+              vs-w="6">
+        <h2>{{ label }}</h2>
+      </vs-col>
+      <vs-col vs-type="flex"
+              vs-justify="flex-end"
+              vs-align="center"
+              vs-w="6">
+        <vs-chip vs-color="success"
+                 vs-icon="check_circle">
+          Completed: {{ completed }}/{{ target }}
+        </vs-chip>
+        <vs-chip vs-color="danger"
+                 vs-icon="error">
+          Interruptions: {{ failed }}
+        </vs-chip>
+      </vs-col>
+    </vs-row>
 
-        <h1>{{ minutes }}:{{ seconds }}</h1>
+    <h1>{{ minutes }}:{{ seconds }}</h1>
 
-        <vs-row>
-          <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-            <vs-button vs-color="success"
-                       vs-type="filled"
-                       v-on:click="start"
-                       v-if="stopped"
-                       vs-icon="play_arrow"
-                       vs-size="large"
-                       accesskey="s">Start countdown</vs-button>
-            <vs-button vs-color="danger"
-                       vs-type="filled"
-                       v-on:click="interrupt"
-                       v-if="running"
-                       vs-icon="warning"
-                       vs-size="large"
-                       accesskey="i">Work interruption</vs-button>
-            <vs-button vs-color="success"
-                       vs-type="filled"
-                       v-on:click="skip"
-                       v-if="resting"
-                       vs-icon="skip_next"
-                       vs-size="large"
-                       accesskey="s">Skip rest break</vs-button>
-          </vs-col>
-        </vs-row>
-      </vs-alert>
-    </vs-col>
-  </vs-row>
+    <vs-row>
+      <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
+        <vs-button vs-color="success"
+                   vs-type="filled"
+                   v-on:click="start"
+                   v-if="stopped"
+                   vs-icon="play_arrow"
+                   vs-size="large"
+                   accesskey="s">Start countdown</vs-button>
+        <vs-button vs-color="danger"
+                   vs-type="filled"
+                   v-on:click="interrupt"
+                   v-if="running"
+                   vs-icon="warning"
+                   vs-size="large"
+                   accesskey="i">Work interruption</vs-button>
+        <vs-button vs-color="success"
+                   vs-type="filled"
+                   v-on:click="skip"
+                   v-if="resting"
+                   vs-icon="skip_next"
+                   vs-size="large"
+                   accesskey="k">Skip rest break</vs-button>
+      </vs-col>
+    </vs-row>
+  </vs-alert>
 </template>
 
 <script>
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 const MILLISECONDS_HOUR = 60 * MILLISECONDS_MINUTE;
-const COUNTDOWN = 25;
-const REST_COUNTDOWN = 5;
-const LONG_REST_COUNTDOWN = 15;
+const COUNTDOWN = 0.1; // 25;
+const REST_COUNTDOWN = 0.1; // 5;
+const LONG_REST_COUNTDOWN = 0.25; // 15;
 const LONG_REST_EVERY = 4;
 
 export default {
@@ -122,10 +118,10 @@ export default {
       return Math.floor((seconds / (total / 1000)) * 100);
     },
     resting() {
-      return this.counting && this.timer === 'rest';
+      return !this.isWork();
     },
     running() {
-      return this.counting && this.timer === 'work';
+      return this.counting && this.isWork();
     },
     stopped() {
       return !this.counting;
@@ -273,5 +269,8 @@ h1 {
 #stats {
   margin-top: 10px;
   font-weight:bolder
+}
+.vs-button {
+  margin: 2px;
 }
 </style>

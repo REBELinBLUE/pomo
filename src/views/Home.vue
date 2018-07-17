@@ -1,7 +1,16 @@
 <template>
   <div>
-    <Timer />
-    <TaskList />
+    <vs-row>
+      <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
+        <Timer />
+      </vs-col>
+    </vs-row>
+
+    <vs-row>
+      <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
+        <TaskList />
+      </vs-col>
+    </vs-row>
   </div>
 </template>
 
