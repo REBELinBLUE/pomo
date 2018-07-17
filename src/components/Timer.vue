@@ -15,11 +15,11 @@
               vs-w="6">
         <vs-chip vs-color="success"
                  vs-icon="check_circle">
-          Completed: {{ completed }}/{{ target }}
+          Completed: {{ completedCount }}/{{ target }}
         </vs-chip>
         <vs-chip vs-color="danger"
                  vs-icon="error">
-          Interruptions: {{ failed }}
+          Interruptions: {{ failedCount }}
         </vs-chip>
       </vs-col>
     </vs-row>
@@ -56,6 +56,10 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
+import { WORK_INTERVAL_COMPLETED, WORK_INTERVAL_INTERRUPTED } from "../store";
+
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 const MILLISECONDS_HOUR = 60 * MILLISECONDS_MINUTE;
@@ -80,10 +84,10 @@ export default {
     },
   },
   computed: {
-    completed() {
+    completedCount() {
       return this.$store.state.completed;
     },
-    failed() {
+    failedCount() {
       return this.$store.state.failed;
     },
     label() {
@@ -150,6 +154,10 @@ export default {
     },
   },
   methods: {
+    ...mapMutations({
+      completed: WORK_INTERVAL_COMPLETED,
+      interrupted: WORK_INTERVAL_INTERRUPTED,
+    }),
     init() {
       this.count = this.countdown * 60 * 1000;
       this.endTime = this.now() + this.count;
@@ -192,7 +200,7 @@ export default {
     },
     interrupt() {
       if (this.isWork()) {
-        this.$store.commit('interrupt');
+        this.interrupted();
       }
 
       this.init();
@@ -216,7 +224,7 @@ export default {
     },
     stop() {
       if (this.isWork()) {
-        this.$store.commit('completed');
+        this.completed();
       }
 
       this.counting = false;
@@ -247,7 +255,7 @@ export default {
         return false;
       }
 
-      return this.$store.state.completed % LONG_REST_EVERY === 0;
+      return this.completedCount % LONG_REST_EVERY === 0;
     },
   },
   created() {

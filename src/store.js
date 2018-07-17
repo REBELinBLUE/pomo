@@ -4,6 +4,8 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 export const STORAGE_KEY = 'tasks';
+export const WORK_INTERVAL_COMPLETED = '@TIMER/WORK_INTERVAL_COMPLETED';
+export const WORK_INTERVAL_INTERRUPTED = '@TIMER/WORK_INTERVAL_INTERRUPTED';
 
 const DEFAULT = JSON.stringify([
   {
@@ -36,10 +38,10 @@ export default new Vuex.Store({
     tasks: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || DEFAULT),
   },
   mutations: {
-    interrupt() {
+    [WORK_INTERVAL_INTERRUPTED]() {
       this.state.failed = this.state.failed + 1;
     },
-    completed() {
+    [WORK_INTERVAL_COMPLETED]() {
       this.state.completed = this.state.completed + 1;
     },
     // addTodo (state, todo) {
