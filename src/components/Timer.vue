@@ -4,7 +4,28 @@
       <vs-alert vs-active="true" :vs-color="color">
         <vs-progress :vs-height="8" :vs-percent="percentage" :vs-color="color" />
 
-        <h2>{{ label }}</h2>
+        <vs-row id="stats">
+          <vs-col vs-type="flex"
+                  vs-justify="flex-start"
+                  vs-align="center"
+                  vs-w="6">
+            <h2>{{ label }}</h2>
+          </vs-col>
+          <vs-col vs-type="flex"
+                  vs-justify="flex-end"
+                  vs-align="center"
+                  vs-w="6">
+            <vs-chip vs-color="success"
+                     vs-icon="check_circle">
+              Completed: {{ completed }}/{{ target }}
+            </vs-chip>
+            <vs-chip vs-color="danger"
+                     vs-icon="error">
+              Interruptions: {{ failed }}
+            </vs-chip>
+          </vs-col>
+        </vs-row>
+
         <h1>{{ minutes }}:{{ seconds }}</h1>
 
         <vs-row>
@@ -31,26 +52,6 @@
                        vs-size="large"
                        accesskey="s">Skip rest break</vs-button>
           </vs-col>
-        </vs-row>
-        <vs-row id="stats">
-          <vs-col vs-color="red" vs-type="flex"
-                  vs-justify="flex-end"
-                  vs-align="center"
-                  vs-w="6">
-                    <vs-chip vs-color="success"
-                             vs-icon="check_circle">
-                      Completed: {{ completed }}/{{ target }}
-                    </vs-chip>
-                  </vs-col>
-          <vs-col vs-type="flex"
-                  vs-justify="flex-start"
-                  vs-align="center"
-                  vs-w="6">
-                    <vs-chip vs-color="danger"
-                             vs-icon="error">
-                      Interruptions: {{ failed }}
-                    </vs-chip>
-                  </vs-col>
         </vs-row>
       </vs-alert>
     </vs-col>
