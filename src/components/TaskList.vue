@@ -27,26 +27,11 @@ import Task from '@/components/Task.vue';
 
 export default {
   name: 'TaskList',
-  data: () => ({
-    tasks: [
-      {
-        id: 1,
-        date: Date.now(),
-        description: 'BOR-1234',
-        status: 'success',
-        time: 25 * 60,
-        notes: null,
-      },
-      {
-        id: 2,
-        date: Date.now(),
-        description: 'BOR-7672',
-        status: 'failed',
-        time: 6.5 * 60,
-        notes: 'Interrupted by someone',
-      },
-    ],
-  }),
+  computed: {
+    tasks() {
+      return this.$store.state.tasks;
+    },
+  },
   components: {
     TableHead,
     Task,

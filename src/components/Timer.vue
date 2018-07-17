@@ -24,6 +24,7 @@
       </vs-col>
     </vs-row>
 
+
     <h1>{{ minutes }}:{{ seconds }}</h1>
 
     <vs-row>
@@ -58,9 +59,9 @@
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 const MILLISECONDS_HOUR = 60 * MILLISECONDS_MINUTE;
-const COUNTDOWN = 0.1; // 25;
-const REST_COUNTDOWN = 0.1; // 5;
-const LONG_REST_COUNTDOWN = 0.25; // 15;
+const COUNTDOWN = 25; // 0.1
+const REST_COUNTDOWN = 5; // 0.1
+const LONG_REST_COUNTDOWN = 15; // 0.25
 const LONG_REST_EVERY = 4;
 
 export default {
@@ -70,8 +71,6 @@ export default {
     count: 0,
     counting: false,
     endTime: 0,
-    failed: 0,
-    completed: 0,
     target: 10,
   }),
   props: {
@@ -81,6 +80,12 @@ export default {
     },
   },
   computed: {
+    completed() {
+      return this.$store.state.completed;
+    },
+    failed() {
+      return this.$store.state.failed;
+    },
     label() {
       if (this.isWork()) {
         return 'Work Interval';
@@ -187,7 +192,7 @@ export default {
     },
     interrupt() {
       if (this.isWork()) {
-        this.failed = this.failed + 1;
+        this.$store.commit('interrupt');
       }
 
       this.init();
@@ -211,7 +216,7 @@ export default {
     },
     stop() {
       if (this.isWork()) {
-        this.completed = this.completed + 1;
+        this.$store.commit('completed');
       }
 
       this.counting = false;
@@ -242,7 +247,7 @@ export default {
         return false;
       }
 
-      return this.completed % LONG_REST_EVERY === 0;
+      return this.$store.state.completed % LONG_REST_EVERY === 0;
     },
   },
   created() {
