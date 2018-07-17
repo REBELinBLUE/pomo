@@ -1,14 +1,57 @@
 <template>
   <vs-row>
-    <vs-col vs-offset="2" vs-type="flex" vs-justify="center" vs-align="center" vs-w="8">
+    <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
       <vs-alert vs-active="true" :vs-color="color">
-        <vs-progress :vs-height="8" :vs-percent="remaining" :vs-color="color" />
-        <h1>{{ minutes }}:{{ seconds }}</h1>
-        <span v-on:click="start" v-if="stopped">Start</span>
-        <span v-on:click="interrupt" v-if="running">Interruption!</span>
+        <vs-progress :vs-height="8" :vs-percent="percentage" :vs-color="color" />
 
-        <h2>Completed: {{ completed }}</h2>
-        <h2>Interruptions: {{ failed }}</h2>
+        <h2>{{ label }}</h2>
+        <h1>{{ minutes }}:{{ seconds }}</h1>
+
+        <vs-row>
+          <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
+            <vs-button vs-color="success"
+                       vs-type="filled"
+                       v-on:click="start"
+                       v-if="stopped"
+                       vs-icon="play_arrow"
+                       vs-size="large"
+                       accesskey="s">Start countdown</vs-button>
+            <vs-button vs-color="danger"
+                       vs-type="filled"
+                       v-on:click="interrupt"
+                       v-if="running"
+                       vs-icon="warning"
+                       vs-size="large"
+                       accesskey="i">Work interruption</vs-button>
+            <vs-button vs-color="success"
+                       vs-type="filled"
+                       v-on:click="skip"
+                       v-if="resting"
+                       vs-icon="skip_next"
+                       vs-size="large"
+                       accesskey="s">Skip rest break</vs-button>
+          </vs-col>
+        </vs-row>
+        <vs-row id="stats">
+          <vs-col vs-color="red" vs-type="flex"
+                  vs-justify="flex-end"
+                  vs-align="center"
+                  vs-w="6">
+                    <vs-chip vs-color="success"
+                             vs-icon="check_circle">
+                      Completed: {{ completed }}/{{ target }}
+                    </vs-chip>
+                  </vs-col>
+          <vs-col vs-type="flex"
+                  vs-justify="flex-start"
+                  vs-align="center"
+                  vs-w="6">
+                    <vs-chip vs-color="danger"
+                             vs-icon="error">
+                      Interruptions: {{ failed }}
+                    </vs-chip>
+                  </vs-col>
+        </vs-row>
       </vs-alert>
     </vs-col>
   </vs-row>
@@ -26,14 +69,13 @@ const LONG_REST_EVERY = 4;
 export default {
   name: 'Timer',
   data: () => ({
-    countdown: COUNTDOWN,
     timer: 'work',
-    failed: 0,
-    completed: 0,
-    color: 'primary',
     count: 0,
     counting: false,
     endTime: 0,
+    failed: 0,
+    completed: 0,
+    target: 10,
   }),
   props: {
     now: {
@@ -42,18 +84,47 @@ export default {
     },
   },
   computed: {
-    remaining() {
+    label() {
+      if (this.isWork()) {
+        return 'Work Interval';
+      }
+
+      if (this.isLongBreak()) {
+        return 'Long Break';
+      }
+
+      return 'Short Break';
+    },
+    countdown() {
+      if (!this.isWork()) {
+        if (!this.isLongBreak()) {
+          return REST_COUNTDOWN;
+        }
+
+        return LONG_REST_COUNTDOWN;
+      }
+
+      return COUNTDOWN;
+    },
+    color() {
+      if (this.isWork()) {
+        return 'danger';
+      }
+
+      return 'success';
+    },
+    // Percentage of time remaining
+    percentage() {
       const total = this.countdown * 60 * 1000;
       const seconds = Math.floor(this.count / MILLISECONDS_SECOND);
 
-      const res = Math.floor((seconds / (total / 1000)) * 100);
-
-      console.log(res);
-
-      return res;
+      return Math.floor((seconds / (total / 1000)) * 100);
+    },
+    resting() {
+      return this.counting && this.timer === 'rest';
     },
     running() {
-      return this.counting;
+      return this.counting && this.timer === 'work';
     },
     stopped() {
       return !this.counting;
@@ -78,22 +149,12 @@ export default {
   },
   methods: {
     init() {
-      const time = this.countdown * 60 * 1000;
-
-      this.count = time;
-      this.endTime = this.now() + time;
+      this.count = this.countdown * 60 * 1000;
+      this.endTime = this.now() + this.count;
     },
     start() {
       if (this.counting) {
         return;
-      }
-
-      this.init();
-
-      if (this.timer === 'work') {
-        this.color = 'danger';
-      } else {
-        this.color = 'success';
       }
 
       this.$emit('timerstart');
@@ -101,16 +162,6 @@ export default {
       this.counting = true;
       this.next();
     },
-    // pause() {
-    //   if (!this.counting) {
-    //     return;
-    //   }
-    //
-    //   this.$emit('timerpause');
-    //
-    //   this.counting = false;
-    //   clearTimeout(this.timeout);
-    // },
     next() {
       this.timeout = setTimeout(this.step.bind(this), 1000);
     },
@@ -124,7 +175,7 @@ export default {
 
         if (this.count > 0) {
           this.$emit('timerprogress', {
-            remaining: this.remaining,
+            percentage: this.percentage,
             countdown: this.countdown,
             minutes: this.minutes,
             seconds: this.seconds,
@@ -138,36 +189,44 @@ export default {
       }
     },
     interrupt() {
-      if (this.timer === 'work') {
+      if (this.isWork()) {
         this.failed = this.failed + 1;
       }
+
+      this.init();
 
       this.counting = false;
       clearTimeout(this.timeout);
       this.timeout = undefined;
 
-      this.color = 'primary';
-
       this.$emit('timerinterrupt');
     },
+    skip() {
+      this.counting = false;
+      clearTimeout(this.timeout);
+      this.timeout = undefined;
+
+      this.timer = 'work';
+
+      this.init();
+
+      this.$emit('timerskip');
+    },
     stop() {
-      this.count = 0;
-      if (this.timer === 'work') {
+      if (this.isWork()) {
         this.completed = this.completed + 1;
       }
+
       this.counting = false;
       this.timeout = undefined;
 
-      if (this.timer === 'work') {
-        this.color = 'success';
+      if (this.isWork()) {
         this.timer = 'rest';
-        console.log(this.completed % LONG_REST_EVERY );
-        this.countdown = this.completed % LONG_REST_EVERY > 0 ? REST_COUNTDOWN : LONG_REST_COUNTDOWN;
       } else {
-        this.color = 'danger';
         this.timer = 'work';
-        this.countdown = COUNTDOWN;
       }
+
+      this.init();
 
       clearTimeout(this.timeout);
 
@@ -178,10 +237,15 @@ export default {
         this.count = Math.max(0, this.endTime - this.now());
       }
     },
-  },
-  watch: {
-    time() {
-      this.init();
+    isWork() {
+      return this.timer === 'work';
+    },
+    isLongBreak() {
+      if (this.isWork()) {
+        return false;
+      }
+
+      return this.completed % LONG_REST_EVERY === 0;
     },
   },
   created() {
@@ -197,10 +261,16 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+h2 {
+  font-size: 150%
+}
 h1 {
   text-align: center;
-  font-size: 500%
+  font-size: 750%
+}
+#stats {
+  margin-top: 10px;
+  font-weight:bolder
 }
 </style>
