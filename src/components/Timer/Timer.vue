@@ -2,37 +2,21 @@
   <vs-alert vs-active="true" :vs-color="color">
     <vs-progress :vs-height="8" :vs-percent="percentage" :vs-color="color" />
 
-
     <vs-row id="stats">
-      <vs-col vs-type="flex"
-              vs-justify="flex-start"
-              vs-align="center"
-              vs-w="4">
+      <vs-col vs-type="flex" vs-justify="flex-start" vs-align="center" vs-w="4">
         <h2>{{ label }}</h2>
       </vs-col>
-      <vs-col vs-type="flex"
-              vs-justify="center"
-              vs-align="center"
-              vs-w="4">
+      <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
         <vs-input vs-icon="alarm" placeholder="Enter task name..." v-model="task" v-if="!resting" />
         &nbsp;
       </vs-col>
-      <vs-col vs-type="flex"
-              vs-justify="flex-end"
-              vs-align="center"
-              vs-w="4">
-        <vs-chip vs-color="success"
-                 vs-icon="check_circle">
-          Completed: {{ completedCount }}/{{ targetCount }}
-        </vs-chip>
-        <vs-chip vs-color="danger"
-                 vs-icon="error">
-          Interruptions: {{ failedCount }}
-        </vs-chip>
+      <vs-col vs-type="flex" vs-justify="flex-end" vs-align="center" vs-w="4">
+        <Summary :completed="completedCount" :target="targetCount" :failed="failedCount" />
       </vs-col>
     </vs-row>
 
-    <h1>{{ minutes | zeroPad }}:{{ seconds | zeroPad }}</h1>
+    <!-- FIXME: count is milliseconds not seconds -->
+    <Countdown :seconds="count" />
 
     <vs-row>
       <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
@@ -58,6 +42,7 @@
                    vs-size="large"
                    accesskey="k">Skip rest break</vs-button>
       </vs-col>
+
       <!-- FIXME: This should be in the bottom right corner -->
       <router-link to="/settings" v-if="stopped">
         <vs-button vs-color="primary" vs-type="border" vs-icon="settings" />
@@ -68,19 +53,37 @@
 
 <script>
 import { mapMutations } from 'vuex';
-
-import {
-  WORK_INTERVAL_COMPLETED,
-  WORK_INTERVAL_INTERRUPTED,
-  WORK_ADD_TASK,
-} from '../store/mutations';
+import { WORK_ADD_TASK } from '@/store/constants';
+import Countdown from '@/components/Timer/Countdown.vue';
+import Summary from '@/components/Timer/Summary.vue';
 
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
-const MILLISECONDS_HOUR = 60 * MILLISECONDS_MINUTE;
 
 export default {
   name: 'Timer',
+  components: {
+    Countdown,
+    Summary,
+  },
+  props: {
+    failedCount: {
+      type: Number,
+      default: () => 0,
+    },
+    completedCount: {
+      type: Number,
+      default: () => 0,
+    },
+    targetCount: {
+      type: Number,
+      default: () => 10,
+    },
+    now: {
+      type: Function,
+      default: () => Date.now(),
+    },
+  },
   data: () => ({
     timer: 'work',
     count: 0,
@@ -88,22 +91,7 @@ export default {
     endTime: 0,
     task: '',
   }),
-  props: {
-    now: {
-      type: Function,
-      default: () => Date.now(),
-    },
-  },
   computed: {
-    targetCount() {
-      return this.$store.state.settings.target;
-    },
-    completedCount() {
-      return this.$store.state.completed;
-    },
-    failedCount() {
-      return this.$store.state.failed;
-    },
     label() {
       if (this.isWork()) {
         return 'Work Interval';
@@ -118,7 +106,7 @@ export default {
     countdown() {
       if (!this.isWork()) {
         if (!this.isLongBreak()) {
-          return this.$store.state.settings.rest;
+          return this.$store.state.settings.rest; // FIXME: Don't use state directly
         }
 
         return this.$store.state.settings.long_rest;
@@ -135,10 +123,10 @@ export default {
     },
     // Percentage of time remaining
     percentage() {
-      const total = this.countdown * 60 * 1000;
+      const total = this.countdown * MILLISECONDS_MINUTE;
       const seconds = Math.floor(this.count / MILLISECONDS_SECOND);
 
-      return Math.floor((seconds / (total / 1000)) * 100);
+      return Math.floor((seconds / (total / MILLISECONDS_SECOND)) * 100);
     },
     resting() {
       return !this.isWork();
@@ -149,14 +137,6 @@ export default {
     stopped() {
       return !this.counting;
     },
-    minutes() {
-      const minutes = Math.floor((this.count % MILLISECONDS_HOUR) / MILLISECONDS_MINUTE);
-      return Math.floor(minutes);
-    },
-    seconds() {
-      const seconds = (this.count % MILLISECONDS_MINUTE) / MILLISECONDS_SECOND;
-      return Math.floor(seconds);
-    },
     totalSeconds() {
       const seconds = this.count / MILLISECONDS_SECOND;
 
@@ -166,19 +146,17 @@ export default {
       return this.task.length > 0 ? this.task : 'Unnamed';
     },
     completedTime() {
-      return (this.total - this.count) / 1000;
+      return (this.total - this.count) / MILLISECONDS_SECOND;
     },
   },
   methods: {
     ...mapMutations({
-      completed: WORK_INTERVAL_COMPLETED,
-      interrupted: WORK_INTERVAL_INTERRUPTED,
       addTask: WORK_ADD_TASK,
     }),
     init() {
-      this.total = this.countdown * 60 * 1000;
+      this.total = this.countdown * MILLISECONDS_MINUTE;
       this.count = this.total;
-      this.endTime = this.now() + this.total;
+      this.endTime = this.now + this.total;
     },
     start() {
       if (this.counting) {
@@ -193,7 +171,7 @@ export default {
       this.next();
     },
     next() {
-      this.timeout = setTimeout(this.step.bind(this), 1000);
+      this.timeout = setTimeout(this.step.bind(this), MILLISECONDS_SECOND);
     },
     step() {
       if (!this.counting) {
@@ -220,10 +198,9 @@ export default {
     },
     interrupt() {
       if (this.isWork()) {
-        this.interrupted();
         this.addTask({
           date: new Date(),
-          status: 'failed',
+          interrupted: true,
           description: this.taskName,
           time: this.completedTime,
           notes: null,
@@ -251,10 +228,9 @@ export default {
     },
     stop() {
       if (this.isWork()) {
-        this.completed();
         this.addTask({
           date: new Date(),
-          status: 'success',
+          interrupted: false,
           description: this.taskName,
           time: this.completedTime,
           notes: null,
@@ -278,7 +254,7 @@ export default {
     },
     update() {
       if (this.counting) {
-        this.count = Math.max(0, this.endTime - this.now());
+        this.count = Math.max(0, this.endTime - this.now);
       }
     },
     isWork() {
@@ -289,7 +265,7 @@ export default {
         return false;
       }
 
-      return this.completedCount % this.$store.state.settings.break_after === 0;
+      return this.completedCount % this.$store.state.settings.long_rest_after === 0;
     },
   },
   created() {
@@ -309,13 +285,9 @@ export default {
 h2 {
   font-size: 150%
 }
-h1 {
-  text-align: center;
-  font-size: 750%
-}
 #stats {
   margin-top: 10px;
-  font-weight:bolder
+  font-weight: bolder
 }
 .vs-button {
   margin: 2px;

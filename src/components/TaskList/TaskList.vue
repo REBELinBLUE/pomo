@@ -4,7 +4,7 @@
                     vs-title="Tasks"
                     vs-icon="alarm"
                     :vs-fill="true" />
-    <vs-card-body>
+    <vs-card-body v-if="hasTasks">
       <vs-row>
         <TableHead size="1">Date</TableHead>
         <TableHead size="3">Description</TableHead>
@@ -18,24 +18,32 @@
             :index="index"
             :key="index" />
     </vs-card-body>
+    <vs-card-body v-else>
+      You have not started any tasks today.
+    </vs-card-body>
   </vs-card>
 </template>
 
 <script>
-import TableHead from '@/components/TableHead.vue';
-import Task from '@/components/Task.vue';
+import TableHead from '@/components/TaskList/TableHead.vue';
+import Task from '@/components/TaskList/Task.vue';
 
 export default {
   name: 'TaskList',
-  computed: {
-    tasks() {
-      const { tasks } = this.$store.state;
-      return tasks.reverse();
-    },
-  },
   components: {
     TableHead,
     Task,
+  },
+  props: {
+    tasks: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  computed: {
+    hasTasks() {
+      return this.tasks.length > 0;
+    },
   },
 };
 </script>

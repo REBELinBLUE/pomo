@@ -11,10 +11,13 @@
 </template>
 
 <script>
-import TableCell from '@/components/TableCell.vue';
+import TableCell from '@/components/TaskList/TableCell.vue';
 
 export default {
   name: 'Task',
+  components: {
+    TableCell,
+  },
   props: {
     item: Object,
   },
@@ -61,11 +64,8 @@ export default {
   },
   methods: {
     isCompleted() {
-      return this.item.status === 'success';
+      return !this.item.interrupted;
     },
-  },
-  components: {
-    TableCell,
   },
 };
 </script>
