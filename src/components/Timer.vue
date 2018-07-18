@@ -2,17 +2,25 @@
   <vs-alert vs-active="true" :vs-color="color">
     <vs-progress :vs-height="8" :vs-percent="percentage" :vs-color="color" />
 
+
     <vs-row id="stats">
       <vs-col vs-type="flex"
               vs-justify="flex-start"
               vs-align="center"
-              vs-w="6">
+              vs-w="4">
         <h2>{{ label }}</h2>
+      </vs-col>
+      <vs-col vs-type="flex"
+              vs-justify="center"
+              vs-align="center"
+              vs-w="4">
+        <vs-input vs-icon="alarm" placeholder="Enter task name..." v-model="task" v-if="!resting" />
+        &nbsp;
       </vs-col>
       <vs-col vs-type="flex"
               vs-justify="flex-end"
               vs-align="center"
-              vs-w="6">
+              vs-w="4">
         <vs-chip vs-color="success"
                  vs-icon="check_circle">
           Completed: {{ completedCount }}/{{ target }}
@@ -24,8 +32,7 @@
       </vs-col>
     </vs-row>
 
-
-    <h1>{{ minutes }}:{{ seconds }}</h1>
+    <h1>{{ minutes | zeroPad }}:{{ seconds | zeroPad }}</h1>
 
     <vs-row>
       <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
@@ -58,14 +65,18 @@
 <script>
 import { mapMutations } from 'vuex';
 
-import { WORK_INTERVAL_COMPLETED, WORK_INTERVAL_INTERRUPTED } from "../store";
+import {
+  WORK_INTERVAL_COMPLETED,
+  WORK_INTERVAL_INTERRUPTED,
+  WORK_ADD_TASK,
+} from '../store/mutations';
 
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 const MILLISECONDS_HOUR = 60 * MILLISECONDS_MINUTE;
-const COUNTDOWN = 25; // 0.1
-const REST_COUNTDOWN = 5; // 0.1
-const LONG_REST_COUNTDOWN = 15; // 0.25
+const COUNTDOWN = 0.2; //25; // 0.1
+const REST_COUNTDOWN = 0.2; //5; // 0.1
+const LONG_REST_COUNTDOWN = 0.5; //15; // 0.25
 const LONG_REST_EVERY = 4;
 
 export default {
@@ -76,6 +87,7 @@ export default {
     counting: false,
     endTime: 0,
     target: 10,
+    task: '',
   }),
   props: {
     now: {
@@ -137,35 +149,41 @@ export default {
     },
     minutes() {
       const minutes = Math.floor((this.count % MILLISECONDS_HOUR) / MILLISECONDS_MINUTE);
-      const preprocess = value => (value < 10 ? `0${value}` : value);
-
-      return preprocess(Math.floor(minutes));
+      return Math.floor(minutes);
     },
     seconds() {
       const seconds = (this.count % MILLISECONDS_MINUTE) / MILLISECONDS_SECOND;
-      const preprocess = value => (value < 10 ? `0${value}` : value);
-
-      return preprocess(Math.floor(seconds));
+      return Math.floor(seconds);
     },
     totalSeconds() {
       const seconds = this.count / MILLISECONDS_SECOND;
 
       return Math.floor(seconds);
     },
+    taskName() {
+      return this.task.length > 0 ? this.task : 'Unnamed';
+    },
+    completedTime() {
+      return (this.total - this.count) / 1000;
+    },
   },
   methods: {
     ...mapMutations({
       completed: WORK_INTERVAL_COMPLETED,
       interrupted: WORK_INTERVAL_INTERRUPTED,
+      addTask: WORK_ADD_TASK,
     }),
     init() {
-      this.count = this.countdown * 60 * 1000;
-      this.endTime = this.now() + this.count;
+      this.total = this.countdown * 60 * 1000;
+      this.count = this.total;
+      this.endTime = this.now() + this.total;
     },
     start() {
       if (this.counting) {
         return;
       }
+
+      this.init();
 
       this.$emit('timerstart');
 
@@ -201,6 +219,13 @@ export default {
     interrupt() {
       if (this.isWork()) {
         this.interrupted();
+        this.addTask({
+          date: new Date(),
+          status: 'failed',
+          description: this.taskName,
+          time: this.completedTime,
+          notes: null,
+        });
       }
 
       this.init();
@@ -225,6 +250,13 @@ export default {
     stop() {
       if (this.isWork()) {
         this.completed();
+        this.addTask({
+          date: new Date(),
+          status: 'success',
+          description: this.taskName,
+          time: this.completedTime,
+          notes: null,
+        });
       }
 
       this.counting = false;

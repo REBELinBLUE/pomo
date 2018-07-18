@@ -1,8 +1,8 @@
 <template>
   <vs-row>
-    <TableCell size="1">{{ date }}</TableCell>
+    <TableCell size="1">{{ day | zeroPad }}/{{ month | zeroPad }}/{{ year }}</TableCell>
     <TableCell size="3">{{ item.description }}</TableCell>
-    <TableCell size="1">{{ minutes }}:{{ seconds }}</TableCell>
+    <TableCell size="1">{{ minutes | zeroPad }}:{{ seconds | zeroPad }}</TableCell>
     <TableCell size="2">
       <vs-chip :vs-icon="icon" :vs-color="color">{{ label }}</vs-chip>
     </TableCell>
@@ -20,11 +20,16 @@ export default {
   },
   computed: {
     date() {
-      const date = new Date(this.item.date);
-
-      const preprocess = value => (value < 10 ? `0${value}` : value);
-
-      return `${preprocess(date.getDate())}/${preprocess(date.getMonth() + 1)}/${date.getFullYear()}`;
+      return new Date(this.item.date);
+    },
+    day() {
+      return this.date.getDate();
+    },
+    month() {
+      return this.date.getMonth() + 1;
+    },
+    year() {
+      return this.date.getFullYear();
     },
     icon() {
       if (this.isCompleted()) {
@@ -48,12 +53,10 @@ export default {
       return 'Interrupted';
     },
     minutes() {
-      const preprocess = value => (value < 10 ? `0${value}` : value);
-      return preprocess(Math.floor(this.item.time / 60));
+      return Math.floor(this.item.time / 60);
     },
     seconds() {
-      const preprocess = value => (value < 10 ? `0${value}` : value);
-      return preprocess(this.item.time - (Math.floor(this.item.time / 60) * 60));
+      return this.item.time - (Math.floor(this.item.time / 60) * 60);
     },
   },
   methods: {

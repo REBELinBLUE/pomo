@@ -16,7 +16,7 @@
       <Task v-for="(task, index) in tasks"
             :item="task"
             :index="index"
-            :key="task.id" />
+            :key="index" />
     </vs-card-body>
   </vs-card>
 </template>
@@ -29,7 +29,7 @@ export default {
   name: 'TaskList',
   computed: {
     tasks() {
-      return this.$store.state.tasks;
+      return this.$store.state.tasks.reverse();
     },
   },
   components: {

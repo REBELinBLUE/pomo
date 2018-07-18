@@ -5,9 +5,11 @@ import 'material-icons/iconfont/material-icons.css';
 
 import App from './App.vue';
 import router from './router';
-import store from './store';
+import store from './store/store';
+import filters from './filters';
 
 Vue.use(Vuesax);
+Vue.use(filters);
 
 Vue.config.productionTip = false;
 
