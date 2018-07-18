@@ -156,7 +156,7 @@ export default {
     init() {
       this.total = this.countdown * MILLISECONDS_MINUTE;
       this.count = this.total;
-      this.endTime = this.now + this.total;
+      this.endTime = this.now() + this.total; // TODO: Figure out why it breaks if using this.now rather than this.now()s
     },
     start() {
       if (this.counting) {
@@ -254,7 +254,7 @@ export default {
     },
     update() {
       if (this.counting) {
-        this.count = Math.max(0, this.endTime - this.now);
+        this.count = Math.max(0, this.endTime - this.now());
       }
     },
     isWork() {
