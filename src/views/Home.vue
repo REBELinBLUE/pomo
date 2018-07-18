@@ -1,27 +1,21 @@
 <template>
   <div>
-    <vs-row>
-      <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
-        <Timer :completedCount="completedCount"
-               :failedCount="failedCount"
-               :targetCount="targetCount" />
-      </vs-col>
-    </vs-row>
+    <Timer :completedCount="completedCount"
+           :failedCount="failedCount"
+           :targetCount="targetCount" />
 
-    <vs-row>
-      <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
-        <TaskList :tasks="tasks" />
-      </vs-col>
-    </vs-row>
+    <TaskList :tasks="tasks"
+              emptyMessage="You have not started any tasks today." />
   </div>
 </template>
 
 <script>
+import dateFormat from 'dateformat';
 import Timer from '@/components/Timer/Timer.vue';
 import TaskList from '@/components/TaskList/TaskList.vue';
 
 export default {
-  name: 'home',
+  name: 'Home',
   components: {
     Timer,
     TaskList,
@@ -29,22 +23,21 @@ export default {
   computed: {
     tasks() {
       const { tasks } = this.$store.state;
-      const today = (new Date()).setUTCHours(0, 0, 0, 0);
+      const today = dateFormat(new Date(), 'isoDate');
 
-      return tasks.filter((task) => {
-        const date = (new Date(task.date)).setUTCHours(0, 0, 0, 0);
-        return (date === today);
-      }).sort((a, b) => {
-        if (a.date < b.date) {
-          return 1;
-        }
+      return tasks
+        .filter(task => dateFormat(new Date(task.date), 'isoDate') === today)
+        .sort((a, b) => {
+          if (a.date < b.date) {
+            return 1;
+          }
 
-        if (a.date > b.date) {
-          return -1;
-        }
+          if (a.date > b.date) {
+            return -1;
+          }
 
-        return 0;
-      });
+          return 0;
+        });
     },
     targetCount() {
       return this.$store.state.settings.target;

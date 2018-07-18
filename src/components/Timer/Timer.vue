@@ -1,54 +1,35 @@
 <template>
-  <vs-alert vs-active="true" :vs-color="color">
-    <vs-progress :vs-height="8" :vs-percent="percentage" :vs-color="color" />
+  <vs-row>
+    <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
+      <vs-alert vs-active="true" :vs-color="color">
+        <vs-progress :vs-height="8" :vs-percent="percentage" :vs-color="color" />
 
-    <vs-row id="stats">
-      <vs-col vs-type="flex" vs-justify="flex-start" vs-align="center" vs-w="4">
-        <h2>{{ label }}</h2>
-      </vs-col>
-      <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
-        <vs-input vs-icon="alarm" placeholder="Enter task name..." v-model="task" v-if="!resting" />
-        &nbsp;
-      </vs-col>
-      <vs-col vs-type="flex" vs-justify="flex-end" vs-align="center" vs-w="4">
-        <Summary :completed="completedCount" :target="targetCount" :failed="failedCount" />
-      </vs-col>
-    </vs-row>
+        <vs-row id="stats">
+          <vs-col vs-type="flex" vs-justify="flex-start" vs-align="center" vs-w="4">
+            <h2>{{ label }}</h2>
+          </vs-col>
+          <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
+            <vs-input vs-icon="alarm"
+                      placeholder="Enter task name..."
+                      v-model="task"
+                      v-if="!resting" />
+          </vs-col>
+          <vs-col vs-type="flex" vs-justify="flex-end" vs-align="center" vs-w="4">
+            <Summary :completed="completedCount" :target="targetCount" :failed="failedCount" />
+          </vs-col>
+        </vs-row>
 
-    <!-- FIXME: count is milliseconds not seconds -->
-    <Countdown :seconds="count" />
+        <Countdown :seconds="secondsRemaining" />
 
-    <vs-row>
-      <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-        <vs-button vs-color="success"
-                   vs-type="filled"
-                   v-on:click="start"
-                   v-if="stopped"
-                   vs-icon="play_arrow"
-                   vs-size="large"
-                   accesskey="s">Start countdown</vs-button>
-        <vs-button vs-color="danger"
-                   vs-type="filled"
-                   v-on:click="interrupt"
-                   v-if="running"
-                   vs-icon="warning"
-                   vs-size="large"
-                   accesskey="i">Work interruption</vs-button>
-        <vs-button vs-color="success"
-                   vs-type="filled"
-                   v-on:click="skip"
-                   v-if="resting"
-                   vs-icon="skip_next"
-                   vs-size="large"
-                   accesskey="k">Skip rest break</vs-button>
-      </vs-col>
-
-      <!-- FIXME: This should be in the bottom right corner -->
-      <router-link to="/settings" v-if="stopped">
-        <vs-button vs-color="primary" vs-type="border" vs-icon="settings" />
-      </router-link>
-    </vs-row>
-  </vs-alert>
+        <Actions :onStart="start"
+                 :onInterrupt="interrupt"
+                 :onSkip="skip"
+                 :stopped="stopped"
+                 :running="running"
+                 :resting="resting" />
+      </vs-alert>
+    </vs-col>
+  </vs-row>
 </template>
 
 <script>
@@ -56,6 +37,7 @@ import { mapMutations } from 'vuex';
 import { WORK_ADD_TASK } from '@/store/constants';
 import Countdown from '@/components/Timer/Countdown.vue';
 import Summary from '@/components/Timer/Summary.vue';
+import Actions from '@/components/Timer/Actions.vue';
 
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
@@ -65,6 +47,7 @@ export default {
   components: {
     Countdown,
     Summary,
+    Actions,
   },
   props: {
     failedCount: {
@@ -137,7 +120,7 @@ export default {
     stopped() {
       return !this.counting;
     },
-    totalSeconds() {
+    secondsRemaining() {
       const seconds = this.count / MILLISECONDS_SECOND;
 
       return Math.floor(seconds);
@@ -155,8 +138,8 @@ export default {
     }),
     init() {
       this.total = this.countdown * MILLISECONDS_MINUTE;
-      this.count = this.total;
-      this.endTime = this.now() + this.total; // TODO: Figure out why it breaks if using this.now rather than this.now()s
+      this.count = this.total; // TODO: Figure out why it breaks if using this.now
+      this.endTime = this.now() + this.total;
     },
     start() {
       if (this.counting) {
@@ -165,7 +148,10 @@ export default {
 
       this.init();
 
-      this.$emit('timerstart');
+      this.$emit('timerstart', {
+        type: this.timer,
+        countdown: this.countdown,
+      });
 
       this.counting = true;
       this.next();
@@ -179,15 +165,14 @@ export default {
       }
 
       if (this.count > 0) {
-        this.count -= 1000;
+        this.count -= MILLISECONDS_SECOND;
 
         if (this.count > 0) {
           this.$emit('timerprogress', {
             percentage: this.percentage,
+            type: this.timer,
             countdown: this.countdown,
-            minutes: this.minutes,
-            seconds: this.seconds,
-            totalSeconds: this.totalSeconds,
+            secondsRemaining: this.secondsRemaining,
           });
         }
 
@@ -199,7 +184,6 @@ export default {
     interrupt() {
       if (this.isWork()) {
         this.addTask({
-          date: new Date(),
           interrupted: true,
           description: this.taskName,
           time: this.completedTime,
@@ -213,7 +197,11 @@ export default {
       clearTimeout(this.timeout);
       this.timeout = undefined;
 
-      this.$emit('timerinterrupt');
+      this.$emit('timerinterrupt', {
+        percentage: this.percentage,
+        countdown: this.countdown,
+        secondsRemaining: this.secondsRemaining,
+      });
     },
     skip() {
       this.counting = false;
@@ -229,13 +217,17 @@ export default {
     stop() {
       if (this.isWork()) {
         this.addTask({
-          date: new Date(),
           interrupted: false,
           description: this.taskName,
           time: this.completedTime,
           notes: null,
         });
       }
+
+      this.$emit('timerend', {
+        type: this.timer,
+        countdown: this.countdown,
+      });
 
       this.counting = false;
       this.timeout = undefined;
@@ -249,8 +241,6 @@ export default {
       this.init();
 
       clearTimeout(this.timeout);
-
-      this.$emit('timerend');
     },
     update() {
       if (this.counting) {

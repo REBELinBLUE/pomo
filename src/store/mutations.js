@@ -1,8 +1,16 @@
+import dateFormat from 'dateformat';
 import { WORK_ADD_TASK, SETTINGS_UPDATE } from './constants';
 
 export default {
   [WORK_ADD_TASK](state, task) {
-    state.tasks.push(task);
+    state.tasks.push({
+      date: dateFormat(new Date(), 'isoUtcDateTime'),
+      interrupted: false,
+      description: undefined,
+      time: undefined,
+      notes: null,
+      ...task,
+    });
   },
 
   [SETTINGS_UPDATE](state, settings) {

@@ -1,6 +1,6 @@
 <template>
   <vs-row>
-    <TableCell size="1">{{ day | zeroPad }}/{{ month | zeroPad }}/{{ year }}</TableCell>
+    <TableCell size="1">{{ date }}</TableCell>
     <TableCell size="3">{{ item.description }}</TableCell>
     <TableCell size="1">{{ minutes | zeroPad }}:{{ seconds | zeroPad }}</TableCell>
     <TableCell size="2">
@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import dateFormat from 'dateformat';
 import TableCell from '@/components/TaskList/TableCell.vue';
 
 export default {
@@ -23,16 +24,7 @@ export default {
   },
   computed: {
     date() {
-      return new Date(this.item.date);
-    },
-    day() {
-      return this.date.getDate();
-    },
-    month() {
-      return this.date.getMonth() + 1;
-    },
-    year() {
-      return this.date.getFullYear();
+      return dateFormat(new Date(this.item.date), 'dd/mm/yyyy');
     },
     icon() {
       if (this.isCompleted()) {

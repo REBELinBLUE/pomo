@@ -56,7 +56,7 @@ const generateOptions = ({
 
 // FIXME: Change so state is only updated on save
 export default {
-  name: 'settings',
+  name: 'Settings',
   components: {
     Setting,
   },
