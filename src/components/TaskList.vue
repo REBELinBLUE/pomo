@@ -29,7 +29,8 @@ export default {
   name: 'TaskList',
   computed: {
     tasks() {
-      return this.$store.state.tasks.reverse();
+      const { tasks } = this.$store.state;
+      return tasks.reverse();
     },
   },
   components: {

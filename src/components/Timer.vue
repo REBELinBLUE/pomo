@@ -23,7 +23,7 @@
               vs-w="4">
         <vs-chip vs-color="success"
                  vs-icon="check_circle">
-          Completed: {{ completedCount }}/{{ target }}
+          Completed: {{ completedCount }}/{{ targetCount }}
         </vs-chip>
         <vs-chip vs-color="danger"
                  vs-icon="error">
@@ -58,6 +58,10 @@
                    vs-size="large"
                    accesskey="k">Skip rest break</vs-button>
       </vs-col>
+      <!-- FIXME: This should be in the bottom right corner -->
+      <router-link to="/settings" v-if="stopped">
+        <vs-button vs-color="primary" vs-type="border" vs-icon="settings" />
+      </router-link>
     </vs-row>
   </vs-alert>
 </template>
@@ -74,10 +78,6 @@ import {
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 const MILLISECONDS_HOUR = 60 * MILLISECONDS_MINUTE;
-const COUNTDOWN = 0.2; //25; // 0.1
-const REST_COUNTDOWN = 0.2; //5; // 0.1
-const LONG_REST_COUNTDOWN = 0.5; //15; // 0.25
-const LONG_REST_EVERY = 4;
 
 export default {
   name: 'Timer',
@@ -86,7 +86,6 @@ export default {
     count: 0,
     counting: false,
     endTime: 0,
-    target: 10,
     task: '',
   }),
   props: {
@@ -96,6 +95,9 @@ export default {
     },
   },
   computed: {
+    targetCount() {
+      return this.$store.state.settings.target;
+    },
     completedCount() {
       return this.$store.state.completed;
     },
@@ -116,13 +118,13 @@ export default {
     countdown() {
       if (!this.isWork()) {
         if (!this.isLongBreak()) {
-          return REST_COUNTDOWN;
+          return this.$store.state.settings.rest;
         }
 
-        return LONG_REST_COUNTDOWN;
+        return this.$store.state.settings.long_rest;
       }
 
-      return COUNTDOWN;
+      return this.$store.state.settings.interval;
     },
     color() {
       if (this.isWork()) {
@@ -287,7 +289,7 @@ export default {
         return false;
       }
 
-      return this.completedCount % LONG_REST_EVERY === 0;
+      return this.completedCount % this.$store.state.settings.break_after === 0;
     },
   },
   created() {

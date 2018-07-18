@@ -15,7 +15,15 @@ const localStoragePlugin = store =>
 // fixme: completed and failed should be stored?
 export default new Vuex.Store({
   state: {
-    completed: 0,
+    settings: {
+      interval: 25,
+      rest: 5,
+      long_rest: 15,
+      break_after: 5,
+      target: 10,
+      autostart: false,
+    },
+    completed: 0, // FIXME: These should be calculated based on the values in storage
     failed: 0,
     tasks: JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '[]'),
   },
