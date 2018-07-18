@@ -1,0 +1,18 @@
+sudo: false
+
+language: node_js
+
+#before_install:
+#  - npm install -g npm-check
+
+install:
+  - npm install
+
+script:
+  #- npm-check
+  - npm run lint
+  - npm run test:unit
+  - npm run build
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
