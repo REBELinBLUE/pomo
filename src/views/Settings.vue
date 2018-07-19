@@ -76,7 +76,7 @@ export default {
     },
     restOptions() {
       return generateOptions({
-        minimum: 0,
+        minimum: 1,
         maximum: 15,
         increment: 1,
         label: 'minutes',
@@ -84,7 +84,7 @@ export default {
     },
     longRestOptions() {
       return generateOptions({
-        minimum: 0,
+        minimum: 5,
         maximum: 30,
         increment: 5,
         label: 'minutes',

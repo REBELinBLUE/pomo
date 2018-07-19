@@ -22,7 +22,9 @@
 
         <Countdown :seconds="secondsRemaining" />
 
-        <Actions :onStart="start"
+        <Interruption v-if="interrupted" :onSave="done" />
+        <Actions v-else
+                 :onStart="start"
                  :onInterrupt="interrupt"
                  :onSkip="skip"
                  :stopped="stopped"
@@ -39,6 +41,7 @@ import { ADD_TASK } from '@/store/constants';
 import Countdown from '@/components/Timer/Countdown.vue';
 import Summary from '@/components/Timer/Summary.vue';
 import Actions from '@/components/Timer/Actions.vue';
+import Interruption from '@/components/Timer/Interruption.vue';
 
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
@@ -50,6 +53,7 @@ export default {
     Countdown,
     Summary,
     Actions,
+    Interruption,
   },
   props: {
     failedCount: {
@@ -82,6 +86,7 @@ export default {
     },
   },
   data: () => ({
+    interrupted: false,
     currentTask: '',
     isWork: true,
     isCounting: false,
@@ -176,6 +181,18 @@ export default {
       this.isCounting = true;
       this.next();
     },
+    done(reason) {
+      this.addTask({
+        interrupted: true,
+        description: this.taskName,
+        time: this.secondsCompleted,
+        notes: reason,
+      });
+
+      this.interrupted = false;
+
+      this.reset();
+    },
     interrupt() {
       if (!this.isWork) {
         return;
@@ -187,15 +204,11 @@ export default {
         msRemaining: this.msRemaining,
       });
 
-      this.addTask({
-        interrupted: true,
-        description: this.taskName,
-        time: this.secondsCompleted,
-        notes: null,
-      });
+      clearTimeout(this.timeout);
+      this.timeout = null;
 
+      this.interrupted = true;
       this.isWork = true;
-      this.reset();
     },
     skip() {
       if (this.isWork) {
