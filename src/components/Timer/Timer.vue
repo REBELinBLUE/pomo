@@ -84,6 +84,10 @@ export default {
       type: Number,
       default: 4,
     },
+    // now: {
+    //   type: Function,
+    //   default: () => Date.now(),
+    // },
   },
   data: () => ({
     interrupted: false,
@@ -162,7 +166,7 @@ export default {
     },
     init() {
       this.isCounting = false;
-      this.timeout = undefined;
+      this.timeout = null;
       this.counter = 0;
       this.endTime = this.now() + this.msTotal;
     },
