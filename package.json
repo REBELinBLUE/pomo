@@ -8,6 +8,7 @@
   "dependencies": {
     "dateformat": "^3.0.3",
     "material-icons": "^0.2.3",
+    "sweet-modal-vue": "^2.0.0",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1",
     "vuesax": "^3.1.43",

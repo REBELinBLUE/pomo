@@ -23,8 +23,7 @@
         <Countdown :seconds="secondsRemaining" />
 
         <Interruption v-if="interrupted" :onSave="done" />
-        <Actions v-else
-                 :onStart="start"
+        <Actions :onStart="start"
                  :onInterrupt="interrupt"
                  :onSkip="skip"
                  :stopped="stopped"
