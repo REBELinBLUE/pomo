@@ -35,7 +35,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
-import { WORK_ADD_TASK } from '@/store/constants';
+import { ADD_TASK } from '@/store/constants';
 import Countdown from '@/components/Timer/Countdown.vue';
 import Summary from '@/components/Timer/Summary.vue';
 import Actions from '@/components/Timer/Actions.vue';
@@ -150,7 +150,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      addTask: WORK_ADD_TASK,
+      addTask: ADD_TASK,
     }),
     now() {
       return Date.now();

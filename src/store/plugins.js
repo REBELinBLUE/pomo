@@ -7,3 +7,7 @@ const localStoragePlugin = store =>
   });
 
 export default [localStoragePlugin];
+
+// export default process.env.NODE_ENV !== 'test'
+//   ? [localStoragePlugin]
+//   : [];
