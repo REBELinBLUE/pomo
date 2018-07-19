@@ -2,7 +2,12 @@
   <div>
     <Timer :completedCount="completedCount"
            :failedCount="failedCount"
-           :targetCount="targetCount" />
+           :targetCount="targetCount"
+           :intervalLength="intervalLength"
+           :restLength="restLength"
+           :longRestLength="longRestLength"
+           :longRestFrequency="longRestFrequency"
+    />
 
     <TaskList :tasks="tasks"
               emptyMessage="You have not started any tasks today." />
@@ -21,6 +26,11 @@ export default {
     TaskList,
   },
   computed: {
+    targetCount() { return this.$store.state.settings.target; },
+    intervalLength() { return this.$store.state.settings.interval; },
+    restLength() { return this.$store.state.settings.rest; },
+    longRestLength() { return this.$store.state.settings.long_rest; },
+    longRestFrequency() { return this.$store.state.settings.long_rest_after; },
     tasks() {
       const { tasks } = this.$store.state;
       const today = dateFormat(new Date(), 'isoDate');
@@ -41,9 +51,6 @@ export default {
 
           return 0;
         });
-    },
-    targetCount() {
-      return this.$store.state.settings.target;
     },
     completedCount() {
       return this.tasks.reduce((accumulator, task) => {

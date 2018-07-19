@@ -64,12 +64,28 @@ export default {
       type: Number,
       default: 10,
     },
+    intervalLength: {
+      type: Number,
+      default: 25,
+    },
+    restLength: {
+      type: Number,
+      default: 5,
+    },
+    longRestLength: {
+      type: Number,
+      default: 15,
+    },
+    longRestFrequency: {
+      type: Number,
+      default: 4,
+    },
   },
   data: () => ({
     currentTask: '',
     isWork: true,
     isCounting: false,
-    msRemaining: 0,
+    counter: 0,
     endTime: 0,
     timeout: null,
   }),
@@ -79,19 +95,23 @@ export default {
         return 'Work Interval';
       }
 
-      if (this.isLongBreak()) {
+      if (this.isLongBreak) {
         return 'Long Break';
       }
 
       return 'Short Break';
     },
+    msRemaining() {
+      if (this.isCounting) {
+        return this.msTotal - this.counter;
+      }
+
+      return this.msTotal;
+    },
     msTotal() {
-      // FIXME: Don't use state directly
-      let countdown = this.$store.state.settings.interval;
+      let countdown = this.intervalLength;
       if (!this.isWork) {
-        countdown = this.isLongBreak() ?
-          this.$store.state.settings.long_rest :
-          this.$store.state.settings.rest;
+        countdown = this.isLongBreak ? this.longRestLength : this.restLength;
       }
 
       return countdown * MILLISECONDS_MINUTE;
@@ -120,6 +140,13 @@ export default {
     taskName() {
       return this.currentTask.length > 0 ? this.currentTask : 'Unnamed';
     },
+    isLongBreak() {
+      if (this.isWork) {
+        return false;
+      }
+
+      return this.completedCount % this.longRestFrequency === 0;
+    },
   },
   methods: {
     ...mapMutations({
@@ -129,15 +156,10 @@ export default {
       return Date.now();
     },
     init() {
-      this.msRemaining = this.msTotal; // TODO: Figure out why it breaks if using this.now
+      this.isCounting = false;
+      this.timeout = undefined;
+      this.counter = 0;
       this.endTime = this.now() + this.msTotal;
-    },
-    isLongBreak() { // FIXME: Should this be data?
-      if (this.isWork) {
-        return false;
-      }
-
-      return this.completedCount % this.$store.state.settings.long_rest_after === 0;
     },
     start() {
       if (this.isCounting) {
@@ -159,6 +181,12 @@ export default {
         return;
       }
 
+      this.$emit('timerinterrupt', {
+        isWork: false,
+        msTotal: this.msTotal,
+        msRemaining: this.msRemaining,
+      });
+
       this.addTask({
         interrupted: true,
         description: this.taskName,
@@ -166,39 +194,30 @@ export default {
         notes: null,
       });
 
-      this.$emit('timerinterrupt', {
-        isWork: false,
-        msTotal: this.msTotal,
-        msRemaining: this.msRemaining,
-      });
-
-      this.init();
-
-      this.isCounting = false;
-      clearTimeout(this.timeout);
-      this.timeout = undefined;
+      this.isWork = true;
+      this.reset();
     },
     skip() {
       if (this.isWork) {
         return;
       }
 
-      this.isCounting = false;
-      clearTimeout(this.timeout);
-      this.timeout = undefined;
+      this.$emit('timerskip');
 
       this.isWork = true;
-
-      this.init();
-
-      this.$emit('timerskip');
+      this.reset();
     },
     stop() {
       if (!this.isCounting) {
         return;
       }
 
-      if (!this.isWork) {
+      this.$emit('timerend', {
+        isWork: this.isWork,
+        msTotal: this.msTotal,
+      });
+
+      if (this.isWork) {
         this.addTask({
           interrupted: false,
           description: this.taskName,
@@ -207,19 +226,8 @@ export default {
         });
       }
 
-      this.$emit('timerend', {
-        isWork: this.isWork,
-        msTotal: this.msTotal,
-      });
-
-      this.isCounting = false;
-      this.timeout = undefined;
-
-      this.isWork = !this.isWork;
-
-      this.init();
-
-      clearTimeout(this.timeout);
+      this.isWork = false;
+      this.reset();
     },
     next() {
       this.timeout = setTimeout(this.step.bind(this), MILLISECONDS_SECOND);
@@ -230,7 +238,7 @@ export default {
       }
 
       if (this.msRemaining > 0) {
-        this.msRemaining -= MILLISECONDS_SECOND;
+        this.counter += MILLISECONDS_SECOND;
 
         if (this.msRemaining > 0) {
           this.$emit('timerprogress', {
@@ -247,8 +255,13 @@ export default {
     },
     update() {
       if (this.isCounting) {
-        this.msRemaining = Math.max(0, this.endTime - this.now());
+        this.counter = Math.max(0, this.endTime - this.now());
       }
+    },
+    reset() {
+      clearTimeout(this.timeout);
+
+      this.init();
     },
   },
   created() {
