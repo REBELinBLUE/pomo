@@ -31,7 +31,7 @@ export default {
 
 <style scoped>
 .con-vs-chip {
-  margin: 0 !important;
+  margin: 0 0 0 10px !important;
   font-weight: bolder;
 }
 </style>

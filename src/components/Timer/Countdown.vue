@@ -3,25 +3,24 @@
 </template>
 
 <script>
-const MILLISECONDS_SECOND = 1;
-const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
-const MILLISECONDS_HOUR = 60 * MILLISECONDS_MINUTE;
+const SECONDS_MINUTE = 60;
+const SECONDS_HOUR = 60 * SECONDS_MINUTE;
 
 export default {
   name: 'Countdown',
   props: {
-    seconds: { // FIXMNE; Is milliseconds
+    seconds: {
       type: Number,
       default: 0,
     },
   },
   computed: {
     minutesRemaining() {
-      const minutes = Math.floor((this.seconds % MILLISECONDS_HOUR) / MILLISECONDS_MINUTE);
+      const minutes = Math.floor((this.seconds % SECONDS_HOUR) / SECONDS_MINUTE);
       return Math.floor(minutes);
     },
     secondsRemaining() {
-      const seconds = (this.seconds % MILLISECONDS_MINUTE) / MILLISECONDS_SECOND;
+      const seconds = (this.seconds % SECONDS_MINUTE);
       return Math.floor(seconds);
     },
   },

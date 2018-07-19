@@ -2,7 +2,7 @@
   <vs-row>
     <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
       <vs-alert vs-active="true" :vs-color="color">
-        <vs-progress :vs-height="8" :vs-percent="percentage" :vs-color="color" />
+        <vs-progress :vs-height="8" :vs-percent="percentageRemaining" :vs-color="color" />
 
         <vs-row id="stats">
           <vs-col vs-type="flex" vs-justify="flex-start" vs-align="center" vs-w="4">
@@ -11,7 +11,7 @@
           <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
             <vs-input vs-icon="alarm"
                       placeholder="Enter task name..."
-                      v-model="task"
+                      v-model="currentTask"
                       v-if="!resting" />
             &nbsp;
           </vs-col>
@@ -26,7 +26,7 @@
                  :onInterrupt="interrupt"
                  :onSkip="skip"
                  :stopped="stopped"
-                 :running="running"
+                 :running="working"
                  :resting="resting" />
       </vs-alert>
     </vs-col>
@@ -64,21 +64,18 @@ export default {
       type: Number,
       default: 10,
     },
-    now: {
-      type: Function,
-      default: () => Date.now(),
-    },
   },
   data: () => ({
-    timer: 'work',
-    count: 0,
-    counting: false,
+    currentTask: '',
+    isWork: true,
+    isCounting: false,
+    msRemaining: 0,
     endTime: 0,
-    task: '',
+    timeout: null,
   }),
   computed: {
     label() {
-      if (this.isWork()) {
+      if (this.isWork) {
         return 'Work Interval';
       }
 
@@ -88,93 +85,158 @@ export default {
 
       return 'Short Break';
     },
-    countdown() {
-      if (!this.isWork()) {
-        if (!this.isLongBreak()) {
-          return this.$store.state.settings.rest; // FIXME: Don't use state directly
-        }
-
-        return this.$store.state.settings.long_rest;
+    msTotal() {
+      // FIXME: Don't use state directly
+      let countdown = this.$store.state.settings.interval;
+      if (!this.isWork) {
+        countdown = this.isLongBreak() ?
+          this.$store.state.settings.long_rest :
+          this.$store.state.settings.rest;
       }
 
-      return this.$store.state.settings.interval;
+      return countdown * MILLISECONDS_MINUTE;
     },
     color() {
-      if (this.isWork()) {
-        return 'danger';
-      }
-
-      return 'success';
+      return this.isWork ? 'danger' : 'success';
     },
-    // Percentage of time remaining
-    percentage() {
-      const total = this.countdown * MILLISECONDS_MINUTE;
-      const seconds = Math.floor(this.count / MILLISECONDS_SECOND);
-
-      return Math.floor((seconds / (total / MILLISECONDS_SECOND)) * 100);
+    percentageRemaining() {
+      return Math.floor((this.msRemaining / this.msTotal) * 100);
     },
     resting() {
-      return !this.isWork();
+      return !this.isWork;
     },
-    running() {
-      return this.counting && this.isWork();
+    working() {
+      return this.isCounting && this.isWork;
     },
     stopped() {
-      return !this.counting;
+      return !this.isCounting;
     },
     secondsRemaining() {
-      const seconds = this.count / MILLISECONDS_SECOND;
-
-      return Math.floor(seconds);
+      return Math.round(this.msRemaining / MILLISECONDS_SECOND);
+    },
+    secondsCompleted() {
+      return Math.floor((this.msTotal - this.msRemaining) / MILLISECONDS_SECOND);
     },
     taskName() {
-      return this.task.length > 0 ? this.task : 'Unnamed';
-    },
-    completedTime() {
-      return Math.floor((this.total - this.count) / MILLISECONDS_SECOND);
+      return this.currentTask.length > 0 ? this.currentTask : 'Unnamed';
     },
   },
   methods: {
     ...mapMutations({
       addTask: WORK_ADD_TASK,
     }),
+    now() {
+      return Date.now();
+    },
     init() {
-      this.total = this.countdown * MILLISECONDS_MINUTE;
-      this.count = this.total; // TODO: Figure out why it breaks if using this.now
-      this.endTime = this.now() + this.total;
+      this.msRemaining = this.msTotal; // TODO: Figure out why it breaks if using this.now
+      this.endTime = this.now() + this.msTotal;
+    },
+    isLongBreak() { // FIXME: Should this be data?
+      if (this.isWork) {
+        return false;
+      }
+
+      return this.completedCount % this.$store.state.settings.long_rest_after === 0;
     },
     start() {
-      if (this.counting) {
+      if (this.isCounting) {
         return;
       }
 
       this.init();
 
       this.$emit('timerstart', {
-        type: this.timer,
-        countdown: this.countdown,
+        isWork: this.isWork,
+        msTotal: this.msTotal,
       });
 
-      this.counting = true;
+      this.isCounting = true;
       this.next();
+    },
+    interrupt() {
+      if (!this.isWork) {
+        return;
+      }
+
+      this.addTask({
+        interrupted: true,
+        description: this.taskName,
+        time: this.secondsCompleted,
+        notes: null,
+      });
+
+      this.$emit('timerinterrupt', {
+        isWork: false,
+        msTotal: this.msTotal,
+        msRemaining: this.msRemaining,
+      });
+
+      this.init();
+
+      this.isCounting = false;
+      clearTimeout(this.timeout);
+      this.timeout = undefined;
+    },
+    skip() {
+      if (this.isWork) {
+        return;
+      }
+
+      this.isCounting = false;
+      clearTimeout(this.timeout);
+      this.timeout = undefined;
+
+      this.isWork = true;
+
+      this.init();
+
+      this.$emit('timerskip');
+    },
+    stop() {
+      if (!this.isCounting) {
+        return;
+      }
+
+      if (!this.isWork) {
+        this.addTask({
+          interrupted: false,
+          description: this.taskName,
+          time: this.secondsCompleted,
+          notes: null,
+        });
+      }
+
+      this.$emit('timerend', {
+        isWork: this.isWork,
+        msTotal: this.msTotal,
+      });
+
+      this.isCounting = false;
+      this.timeout = undefined;
+
+      this.isWork = !this.isWork;
+
+      this.init();
+
+      clearTimeout(this.timeout);
     },
     next() {
       this.timeout = setTimeout(this.step.bind(this), MILLISECONDS_SECOND);
     },
     step() {
-      if (!this.counting) {
+      if (!this.isCounting) {
         return;
       }
 
-      if (this.count > 0) {
-        this.count -= MILLISECONDS_SECOND;
+      if (this.msRemaining > 0) {
+        this.msRemaining -= MILLISECONDS_SECOND;
 
-        if (this.count > 0) {
+        if (this.msRemaining > 0) {
           this.$emit('timerprogress', {
-            percentage: this.percentage,
-            type: this.timer,
-            countdown: this.countdown,
-            secondsRemaining: this.secondsRemaining,
+            isWork: this.isWork,
+            msTotal: this.msTotal,
+            msRemaining: this.msRemaining,
           });
         }
 
@@ -183,81 +245,10 @@ export default {
         this.stop();
       }
     },
-    interrupt() {
-      if (this.isWork()) {
-        this.addTask({
-          interrupted: true,
-          description: this.taskName,
-          time: this.completedTime,
-          notes: null,
-        });
-      }
-
-      this.init();
-
-      this.counting = false;
-      clearTimeout(this.timeout);
-      this.timeout = undefined;
-
-      this.$emit('timerinterrupt', {
-        percentage: this.percentage,
-        countdown: this.countdown,
-        secondsRemaining: this.secondsRemaining,
-      });
-    },
-    skip() {
-      this.counting = false;
-      clearTimeout(this.timeout);
-      this.timeout = undefined;
-
-      this.timer = 'work';
-
-      this.init();
-
-      this.$emit('timerskip');
-    },
-    stop() {
-      if (this.isWork()) {
-        this.addTask({
-          interrupted: false,
-          description: this.taskName,
-          time: this.completedTime,
-          notes: null,
-        });
-      }
-
-      this.$emit('timerend', {
-        type: this.timer,
-        countdown: this.countdown,
-      });
-
-      this.counting = false;
-      this.timeout = undefined;
-
-      if (this.isWork()) {
-        this.timer = 'rest';
-      } else {
-        this.timer = 'work';
-      }
-
-      this.init();
-
-      clearTimeout(this.timeout);
-    },
     update() {
-      if (this.counting) {
-        this.count = Math.max(0, this.endTime - this.now());
+      if (this.isCounting) {
+        this.msRemaining = Math.max(0, this.endTime - this.now());
       }
-    },
-    isWork() {
-      return this.timer === 'work';
-    },
-    isLongBreak() {
-      if (this.isWork()) {
-        return false;
-      }
-
-      return this.completedCount % this.$store.state.settings.long_rest_after === 0;
     },
   },
   created() {
@@ -268,7 +259,6 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('focus', this.onFocus);
-
     clearTimeout(this.timeout);
   },
 };
