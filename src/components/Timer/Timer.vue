@@ -13,6 +13,7 @@
                       placeholder="Enter task name..."
                       v-model="task"
                       v-if="!resting" />
+            &nbsp;
           </vs-col>
           <vs-col vs-type="flex" vs-justify="flex-end" vs-align="center" vs-w="4">
             <Summary :completed="completedCount" :target="targetCount" :failed="failedCount" />
@@ -42,6 +43,7 @@ import Actions from '@/components/Timer/Actions.vue';
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 
+// FIXME: Move counter details to state so it continues to work when switching screen
 export default {
   name: 'Timer',
   components: {
@@ -52,15 +54,15 @@ export default {
   props: {
     failedCount: {
       type: Number,
-      default: () => 0,
+      default: 0,
     },
     completedCount: {
       type: Number,
-      default: () => 0,
+      default: 0,
     },
     targetCount: {
       type: Number,
-      default: () => 10,
+      default: 10,
     },
     now: {
       type: Function,
@@ -129,7 +131,7 @@ export default {
       return this.task.length > 0 ? this.task : 'Unnamed';
     },
     completedTime() {
-      return (this.total - this.count) / MILLISECONDS_SECOND;
+      return Math.floor((this.total - this.count) / MILLISECONDS_SECOND);
     },
   },
   methods: {
@@ -266,6 +268,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('focus', this.onFocus);
+
     clearTimeout(this.timeout);
   },
 };
@@ -273,13 +276,10 @@ export default {
 
 <style scoped lang="scss">
 h2 {
-  font-size: 150%
+  font-size: 150%;
+  font-weight: bolder;
 }
 #stats {
   margin-top: 10px;
-  font-weight: bolder
-}
-.vs-button {
-  margin: 2px;
 }
 </style>

@@ -15,16 +15,23 @@ export default {
   props: {
     failed: {
       type: Number,
-      default: () => 0,
+      default: 0,
     },
     completed: {
       type: Number,
-      default: () => 0,
+      default: 0,
     },
     target: {
       type: Number,
-      default: () => 10,
+      default: 10,
     },
   },
 };
 </script>
+
+<style scoped>
+.con-vs-chip {
+  margin: 0 !important;
+  font-weight: bolder;
+}
+</style>

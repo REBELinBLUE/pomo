@@ -4,10 +4,10 @@ import { WORK_ADD_TASK, SETTINGS_UPDATE } from './constants';
 export default {
   [WORK_ADD_TASK](state, task) {
     state.tasks.push({
-      date: dateFormat(new Date(), 'isoUtcDateTime'),
+      date: dateFormat(new Date(), 'isoDateTime'),
       interrupted: false,
-      description: undefined,
-      time: undefined,
+      // description: undefined,
+      // time: undefined,
       notes: null,
       ...task,
     });

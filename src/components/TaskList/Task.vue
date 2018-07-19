@@ -7,12 +7,15 @@
       <vs-chip :vs-icon="icon" :vs-color="color">{{ label }}</vs-chip>
     </TableCell>
     <TableCell size="5">{{ item.notes }}</TableCell>
+    <vs-divider />
   </vs-row>
 </template>
 
 <script>
 import dateFormat from 'dateformat';
 import TableCell from '@/components/TaskList/TableCell.vue';
+
+const SECONDS_MINUTE = 60;
 
 export default {
   name: 'Task',
@@ -48,10 +51,10 @@ export default {
       return 'Interrupted';
     },
     minutes() {
-      return Math.floor(this.item.time / 60);
+      return Math.floor(this.item.time / SECONDS_MINUTE);
     },
     seconds() {
-      return this.item.time - (Math.floor(this.item.time / 60) * 60);
+      return Math.floor(this.item.time - (this.minutes * SECONDS_MINUTE));
     },
   },
   methods: {
@@ -61,3 +64,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.con-vs-chip {
+  margin: -2px 0 0 0 !important;
+  position: absolute;
+  font-weight: bolder;
+}
+</style>

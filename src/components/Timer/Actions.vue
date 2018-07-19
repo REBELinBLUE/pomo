@@ -23,7 +23,6 @@
                  vs-size="large"
                  accesskey="k">Skip rest break</vs-button>
     </vs-col>
-
   </vs-row>
 </template>
 
@@ -36,16 +35,22 @@ export default {
     onSkip: Function,
     stopped: {
       type: Boolean,
-      default: () => true,
+      default: true,
     },
     running: {
       type: Boolean,
-      default: () => false,
+      default: false,
     },
     resting: {
       type: Boolean,
-      default: () => false,
+      default: false,
     },
   },
 };
 </script>
+
+<style scoped lang="scss">
+.vs-button {
+  margin: 2px;
+}
+</style>

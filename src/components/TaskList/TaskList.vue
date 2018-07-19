@@ -14,7 +14,7 @@
             <TableHead size="2">Status</TableHead>
             <TableHead size="5">Notes</TableHead>
           </vs-row>
-          <vs-divider/>
+          <vs-divider vs-color="primary" />
           <Task v-for="(task, index) in tasks"
                 :item="task"
                 :index="index"
@@ -41,7 +41,7 @@ export default {
   props: {
     emptyMessage: {
       type: String,
-      default: () => 'There are no tasks',
+      default: 'There are no tasks',
     },
     tasks: {
       type: Array,

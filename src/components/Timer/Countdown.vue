@@ -12,7 +12,7 @@ export default {
   props: {
     seconds: { // FIXMNE; Is milliseconds
       type: Number,
-      default: () => 0,
+      default: 0,
     },
   },
   computed: {

@@ -12,6 +12,16 @@ export default {
       type: String,
       default: '1',
     },
+    cssClass: {
+      type: String,
+      default: undefined,
+    },
   },
 };
 </script>
+
+<style scoped>
+.vs-col {
+  padding: 5px 5px 15px 5px;
+}
+</style>

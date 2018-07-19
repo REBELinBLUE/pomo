@@ -28,11 +28,14 @@ export default {
       return tasks
         .filter(task => dateFormat(new Date(task.date), 'isoDate') === today)
         .sort((a, b) => {
-          if (a.date < b.date) {
+          const firstDate = new Date(a.date);
+          const secondDate = new Date(b.date);
+
+          if (firstDate < secondDate) {
             return 1;
           }
 
-          if (a.date > b.date) {
+          if (firstDate > secondDate) {
             return -1;
           }
 
