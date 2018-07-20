@@ -1,7 +1,7 @@
 <template>
   <sweet-modal title="Oh no!" ref="modal" hide-close-button blocking>
-    <h1>No no!</h1>
-    <textarea placeholder="why were you interrupted"
+    <textarea data-gramm_editor="false"
+              placeholder="why were you interrupted"
               v-model="interruption"
               style="width:100%; padding: 10px"
               rows="10" />

@@ -83,10 +83,10 @@ export default {
       type: Number,
       default: 4,
     },
-    // now: {
-    //   type: Function,
-    //   default: () => Date.now(),
-    // },
+    now: {
+      type: Function,
+      default: () => new Date().getTime(),
+    },
   },
   data: () => ({
     interrupted: false,
@@ -160,9 +160,6 @@ export default {
     ...mapMutations({
       addTask: ADD_TASK,
     }),
-    now() {
-      return Date.now();
-    },
     init() {
       this.isCounting = false;
       this.timeout = null;
@@ -207,7 +204,7 @@ export default {
         msRemaining: this.msRemaining,
       });
 
-      clearTimeout(this.timeout);
+      cancelAnimationFrame(this.timeout);
       this.timeout = null;
 
       this.interrupted = true;
@@ -246,7 +243,7 @@ export default {
       this.reset();
     },
     next() {
-      this.timeout = setTimeout(this.step.bind(this), MILLISECONDS_SECOND);
+      this.timeout = requestAnimationFrame(this.step.bind(this));
     },
     step() {
       if (!this.isCounting) {
@@ -254,7 +251,13 @@ export default {
       }
 
       if (this.msRemaining > 0) {
-        this.counter += MILLISECONDS_SECOND;
+        const currentTime = this.now();
+        const remaining = this.endTime - currentTime;
+        const counter = this.msTotal - remaining;
+
+        if (counter - this.counter >= 500) {
+          this.counter = counter;
+        }
 
         if (this.msRemaining > 0) {
           this.$emit('timerprogress', {
@@ -269,13 +272,8 @@ export default {
         this.stop();
       }
     },
-    update() {
-      if (this.isCounting) {
-        this.counter = Math.max(0, this.endTime - this.now());
-      }
-    },
     reset() {
-      clearTimeout(this.timeout);
+      cancelAnimationFrame(this.timeout);
 
       this.init();
     },
@@ -283,12 +281,8 @@ export default {
   created() {
     this.init();
   },
-  mounted() {
-    window.addEventListener('focus', (this.onFocus = this.update.bind(this)));
-  },
   beforeDestroy() {
-    window.removeEventListener('focus', this.onFocus);
-    clearTimeout(this.timeout);
+    cancelAnimationFrame(this.timeout);
   },
 };
 </script>
