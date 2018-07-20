@@ -257,9 +257,7 @@ export default {
 
         if (counter - this.counter >= 500) {
           this.counter = counter;
-        }
 
-        if (this.msRemaining > 0) {
           this.$emit('timerprogress', {
             isWork: this.isWork,
             msTotal: this.msTotal,
