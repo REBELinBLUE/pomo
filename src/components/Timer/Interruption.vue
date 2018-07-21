@@ -1,5 +1,5 @@
 <template>
-  <sweet-modal title="Oh no!" ref="modal" hide-close-button blocking>
+  <sweet-modal title="Oh no!" ref="interrupt" hide-close-button blocking>
     <textarea data-gramm_editor="false"
               placeholder="Why were you interrupted?"
               v-model="innerValue" />
@@ -49,13 +49,13 @@ export default {
         return;
       }
 
-      this.$refs.modal.close();
+      this.$refs.interrupt.close();
 
       this.onSave();
     },
   },
   mounted() {
-    this.$refs.modal.open();
+    this.$refs.interrupt.open();
   },
 };
 </script>
