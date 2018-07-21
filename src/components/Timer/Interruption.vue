@@ -44,8 +44,8 @@ export default {
   },
   methods: {
     done() {
-      if (this.innerValue.trim().length === 0) {
-        this.$refs.modal.bounce();
+      if (this.innerValue === null || this.innerValue.trim().length === 0) {
+        this.$refs.interrupt.bounce();
         return;
       }
 

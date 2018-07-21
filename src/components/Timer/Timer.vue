@@ -276,12 +276,16 @@ export default {
 
       this.isWork = !this.isWork;
       this.reset();
+
+      // if (this.autoStart) {
+      //   this.start();
+      // }
     },
     playSound() {
       if (this.shouldPlayAlarm) {
         const audio = new Audio('alarm.wav');
         audio.volume = 1.0;
-        audio.play().catch(console.error.bind(this));
+        audio.play().catch(() => { /* Do not worry about this error */ });
       }
     },
     next() {
