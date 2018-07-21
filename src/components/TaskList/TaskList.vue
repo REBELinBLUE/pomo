@@ -14,6 +14,7 @@
                        accesskey="d">Download (.csv)</vs-button>
           </json-excel>
         </vs-card-header>
+
         <vs-card-body v-if="hasTasks">
           <vs-row>
             <TableHead size="1">Date</TableHead>
@@ -22,7 +23,9 @@
             <TableHead size="2">Status</TableHead>
             <TableHead size="5">Notes</TableHead>
           </vs-row>
+
           <vs-divider vs-color="primary" />
+
           <Task v-for="(task, index) in tasks"
                 :item="task"
                 :index="index"

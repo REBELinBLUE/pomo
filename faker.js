@@ -1,3 +1,4 @@
+/* eslint-disable */
 const faker = require('faker');
 const dateFormat = require('dateformat');
 

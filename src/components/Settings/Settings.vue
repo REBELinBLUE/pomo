@@ -15,9 +15,11 @@
 
           <vs-divider />
 
-          <Toggle label="Auto-start Timer" v-model="autostart" />
-          <Toggle label="Play alarm sound at end of work interval" v-model="interval_alarm" />
-          <Toggle label="Play alarm sound at end of break" v-model="break_alarm" />
+          <Toggle label="Auto-Start Timer" v-model="autostart" />
+          <Toggle label="Play Alarm Sound After Work Interval" v-model="interval_alarm" />
+          <Toggle label="Play Alarm Sound After Break" v-model="break_alarm" />
+
+          <vs-divider />
 
           <vs-row>
             <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
@@ -139,9 +141,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss">
-.vs-button {
-  margin-top: 20px;
-}
-</style>
