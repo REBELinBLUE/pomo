@@ -30,6 +30,6 @@ export default {
 <style scoped lang="scss">
 h1 {
   text-align: center;
-  font-size: 750%
+  font-size: 750%;
 }
 </style>

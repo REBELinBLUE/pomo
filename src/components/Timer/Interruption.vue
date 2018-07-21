@@ -1,16 +1,19 @@
 <template>
   <sweet-modal title="Oh no!" ref="modal" hide-close-button blocking>
     <textarea data-gramm_editor="false"
-              placeholder="why were you interrupted"
-              v-model="interruption"
-              style="width:100%; padding: 10px"
-              rows="10" />
-    <vs-button slot="button" vs-color="success"
-               vs-type="filled"
-               v-on:click="done"
-               vs-icon="save"
-               vs-size="large"
-               accesskey="d">Done</vs-button>
+              placeholder="Why were you interrupted?"
+              v-model="innerValue" />
+
+    <vs-row slot="button">
+      <vs-col vs-type="flex" vs-justify="flex-end" vs-align="center" vs-w="12">
+        <vs-button vs-color="danger"
+                   vs-type="filled"
+                   v-on:click="done"
+                   vs-icon="save"
+                   vs-size="large"
+                   accesskey="d">Done</vs-button>
+      </vs-col>
+    </vs-row>
   </sweet-modal>
 </template>
 
@@ -24,22 +27,31 @@ export default {
   },
   props: {
     onSave: Function,
+    value: String,
   },
-  data: () => ({
-    interruption: '',
-  }),
+  data() {
+    return {
+      innerValue: this.value,
+    };
+  },
+  watch: {
+    value(val) {
+      this.innerValue = val;
+    },
+    innerValue(val) {
+      this.$emit('input', val);
+    },
+  },
   methods: {
     done() {
-      if (this.interruption.trim().length === 0) {
+      if (this.innerValue.trim().length === 0) {
         this.$refs.modal.bounce();
         return;
       }
 
       this.$refs.modal.close();
 
-      this.onSave(this.interruption);
-
-      this.interruption = '';
+      this.onSave();
     },
   },
   mounted() {
@@ -50,6 +62,12 @@ export default {
 
 <style scoped>
 .vs-button {
-  margin-left: 5px;
+  margin-right: 12px;
+}
+
+textarea {
+  width: 100%;
+  height: 175px;
+  padding: 10px;
 }
 </style>

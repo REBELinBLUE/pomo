@@ -2,34 +2,31 @@
   <vs-row>
     <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
       <vs-alert vs-active="true" :vs-color="color">
-        <vs-progress :vs-height="8" :vs-percent="percentageRemaining" :vs-color="color" />
+        <Info v-model="currentTask"
+                :label="label"
+                :resting="resting"
+                :completed="completedCount"
+                :target="targetCount"
+                :failed="failedCount" />
 
-        <vs-row id="stats">
-          <vs-col vs-type="flex" vs-justify="flex-start" vs-align="center" vs-w="4">
-            <h2>{{ label }}</h2>
-          </vs-col>
-          <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
-            <vs-input vs-icon="alarm"
-                      placeholder="Enter task name..."
-                      v-model="currentTask"
-                      v-if="!resting" />
-            &nbsp;
-          </vs-col>
-          <vs-col vs-type="flex" vs-justify="flex-end" vs-align="center" vs-w="4">
-            <Summary :completed="completedCount" :target="targetCount" :failed="failedCount" />
-          </vs-col>
-        </vs-row>
+        <Progress :completed="msRemaining"
+                  :total="msTotal"
+                  :completed-color="progressCompletedColor"
+                  :remaining-color="progressRemainingColor">
+          <Countdown :seconds="secondsRemaining" />
+        </Progress>
 
-        <Countdown :seconds="secondsRemaining" />
-
-        <Interruption v-if="interrupted" :onSave="done" />
-        <Actions :onStart="start"
-                 :onInterrupt="interrupt"
-                 :onSkip="skip"
+        <Actions :on-start="start"
+                 :on-interrupt="interrupt"
+                 :on-skip="skip"
                  :stopped="stopped"
                  :running="working"
                  :resting="resting" />
       </vs-alert>
+
+      <Interruption v-if="interrupted"
+                    v-model="interruptionReason"
+                    :on-save="done" />
     </vs-col>
   </vs-row>
 </template>
@@ -37,10 +34,11 @@
 <script>
 import { mapMutations } from 'vuex';
 import { ADD_TASK } from '@/store/constants';
+import Info from '@/components/Timer/Info.vue';
 import Countdown from '@/components/Timer/Countdown.vue';
-import Summary from '@/components/Timer/Summary.vue';
 import Actions from '@/components/Timer/Actions.vue';
 import Interruption from '@/components/Timer/Interruption.vue';
+import Progress from '@/components/Timer/Progress.vue';
 
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
@@ -49,8 +47,9 @@ const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 export default {
   name: 'Timer',
   components: {
+    Info,
+    Progress,
     Countdown,
-    Summary,
     Actions,
     Interruption,
   },
@@ -91,6 +90,7 @@ export default {
   data: () => ({
     interrupted: false,
     currentTask: '',
+    interruptionReason: '',
     isWork: true,
     isCounting: false,
     counter: 0,
@@ -127,8 +127,19 @@ export default {
     color() {
       return this.isWork ? 'danger' : 'success';
     },
-    percentageRemaining() {
-      return Math.floor((this.msRemaining / this.msTotal) * 100);
+    progressRemainingColor() {
+      if (this.isWork) {
+        return 'rgb(255, 71, 87)';
+      }
+
+      return 'rgb(109, 198, 81)';
+    },
+    progressCompletedColor() {
+      if (this.isWork) {
+        return 'rgb(251, 223, 223)';
+      }
+
+      return 'rgb(227, 244, 221)';
     },
     resting() {
       return !this.isWork;
@@ -181,12 +192,12 @@ export default {
       this.isCounting = true;
       this.next();
     },
-    done(reason) {
+    done() {
       this.addTask({
         interrupted: true,
         description: this.taskName,
         time: this.secondsCompleted,
-        notes: reason,
+        notes: this.interruptionReason,
       });
 
       this.interrupted = false;
@@ -239,7 +250,7 @@ export default {
         });
       }
 
-      this.isWork = false;
+      this.isWork = !this.isWork;
       this.reset();
     },
     next() {
@@ -289,8 +300,5 @@ export default {
 h2 {
   font-size: 150%;
   font-weight: bolder;
-}
-#stats {
-  margin-top: 10px;
 }
 </style>

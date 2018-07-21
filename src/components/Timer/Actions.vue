@@ -8,6 +8,7 @@
                  vs-icon="play_arrow"
                  vs-size="large"
                  accesskey="s">Start countdown</vs-button>
+
       <vs-button vs-color="danger"
                  vs-type="filled"
                  v-on:click="onInterrupt"
@@ -15,6 +16,7 @@
                  vs-icon="warning"
                  vs-size="large"
                  accesskey="i">Work interruption</vs-button>
+
       <vs-button vs-color="success"
                  vs-type="filled"
                  v-on:click="onSkip"
