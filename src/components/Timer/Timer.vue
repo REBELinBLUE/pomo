@@ -54,6 +54,18 @@ export default {
     Interruption,
   },
   props: {
+    autoStart: {
+      type: Boolean,
+      default: false,
+    },
+    intervalAlarm: {
+      type: Boolean,
+      default: true,
+    },
+    breakAlarm: {
+      type: Boolean,
+      default: true,
+    },
     failedCount: {
       type: Number,
       default: 0,
@@ -159,6 +171,15 @@ export default {
     taskName() {
       return this.currentTask.length > 0 ? this.currentTask : 'Unnamed';
     },
+    shouldPlayAlarm() {
+      if (this.isWork && this.intervalAlarm) {
+        return true;
+      } else if (!this.isWork && this.breakAlarm) {
+        return true;
+      }
+
+      return false;
+    },
     isLongBreak() {
       if (this.isWork) {
         return false;
@@ -250,8 +271,17 @@ export default {
         });
       }
 
+      this.playSound();
+
       this.isWork = !this.isWork;
       this.reset();
+    },
+    playSound() {
+      if (this.shouldPlayAlarm) {
+        const audio = new Audio('alarm.wav');
+        audio.volume = 1.0;
+        audio.play().catch(console.error.bind(this));
+      }
     },
     next() {
       this.timeout = requestAnimationFrame(this.step.bind(this));

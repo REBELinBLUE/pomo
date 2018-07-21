@@ -16,12 +16,22 @@ export default {
   },
   computed: {
     minutesRemaining() {
-      const minutes = Math.floor((this.seconds % SECONDS_HOUR) / SECONDS_MINUTE);
-      return Math.floor(minutes);
+      let remaining = Math.floor(Math.floor((this.seconds % SECONDS_HOUR) / SECONDS_MINUTE));
+
+      if (remaining < 0) {
+        remaining = 0;
+      }
+
+      return remaining;
     },
     secondsRemaining() {
-      const seconds = (this.seconds % SECONDS_MINUTE);
-      return Math.floor(seconds);
+      let remaining = Math.floor((this.seconds % SECONDS_MINUTE));
+
+      if (remaining < 0) {
+        remaining = 0;
+      }
+
+      return remaining;
     },
   },
 };
