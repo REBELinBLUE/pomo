@@ -1,16 +1,21 @@
 <template>
   <div>
     <label>{{ label }}</label>
-    <vs-switch v-model="innerValue" />
+    <vs-select v-model="innerValue">
+      <vs-select-item :key="index"
+                      :vs-value="item.value"
+                      :vs-text="item.text" v-for="(item, index) in options" />
+    </vs-select>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Toggle',
+  name: 'Dropdown',
   props: {
     label: String,
-    value: Boolean,
+    value: Number,
+    options: Array,
   },
   data() {
     return {
@@ -37,7 +42,7 @@ div {
     bottom: 10px;
   }
 
-  .vs-switch {
+  .con-select {
     float: right;
   }
 }

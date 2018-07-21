@@ -1,5 +1,5 @@
 <template>
-  <SettingsPanel />
+  <SettingsPanel :settings="settings" />
 </template>
 
 <script>
@@ -9,6 +9,11 @@ export default {
   name: 'Settings',
   components: {
     SettingsPanel,
+  },
+  data() {
+    return {
+      settings: this.$store.state.settings,
+    };
   },
 };
 </script>

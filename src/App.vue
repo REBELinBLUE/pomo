@@ -6,7 +6,7 @@
       <router-link to="/history">History</router-link>
     </div>
 
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -22,9 +22,11 @@
   margin: auto;
   text-align: center;
   padding: 15px;
+
   a {
     font-weight: bold;
     color: #2c3e50;
+
     &.router-link-exact-active {
       color: #42b983;
     }

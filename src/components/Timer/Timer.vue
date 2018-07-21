@@ -222,6 +222,7 @@ export default {
       });
 
       this.interrupted = false;
+      this.interruptionReason = null;
 
       this.reset();
     },
