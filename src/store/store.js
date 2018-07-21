@@ -16,6 +16,8 @@ export default new Vuex.Store({
       long_rest_after: 4,
       target: 10,
       autostart: false,
+      interval_alarm: true,
+      break_alarm: true,
     })),
   },
   plugins,

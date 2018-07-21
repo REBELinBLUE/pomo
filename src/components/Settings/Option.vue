@@ -14,7 +14,7 @@ import { mapMutations } from 'vuex';
 import { SETTINGS_UPDATE } from '@/store/constants';
 
 export default {
-  name: 'Setting',
+  name: 'Option',
   props: {
     label: String,
     setting: String,

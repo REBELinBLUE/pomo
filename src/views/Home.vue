@@ -1,16 +1,19 @@
 <template>
   <div>
-    <Timer :completedCount="completedCount"
-           :failedCount="failedCount"
-           :targetCount="targetCount"
-           :intervalLength="intervalLength"
-           :restLength="restLength"
-           :longRestLength="longRestLength"
-           :longRestFrequency="longRestFrequency"
+    <Timer :completed-count="completedCount"
+           :failed-count="failedCount"
+           :target-count="targetCount"
+           :interval-length="intervalLength"
+           :rest-length="restLength"
+           :long-rest-length="longRestLength"
+           :long-rest-frequency="longRestFrequency"
+           :auto-start="autoStart"
+           :interval-alarm="intervalAlarm"
+           :break-alarm="breakAlarm"
     />
 
     <TaskList :tasks="tasks"
-              emptyMessage="You have not started any tasks today." />
+              empty-message="You have not started any tasks today." />
   </div>
 </template>
 
@@ -31,6 +34,9 @@ export default {
     restLength() { return this.$store.state.settings.rest; },
     longRestLength() { return this.$store.state.settings.long_rest; },
     longRestFrequency() { return this.$store.state.settings.long_rest_after; },
+    autoStart() { return this.$store.state.settings.autostart; },
+    intervalAlarm() { return this.$store.state.settings.interval_alarm; },
+    breakAlarm() { return this.$store.state.settings.break_alarm; },
     tasks() {
       const { tasks } = this.$store.state;
       const today = dateFormat(new Date(), 'isoDate');
