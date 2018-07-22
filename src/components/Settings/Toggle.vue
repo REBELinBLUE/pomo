@@ -19,10 +19,10 @@ export default {
   },
   watch: {
     value(val) {
-      this.innerValue = val;
+      this.innerValue = !!val;
     },
     innerValue(val) {
-      this.$emit('input', val);
+      this.$emit('input', !!val);
     },
   },
 };

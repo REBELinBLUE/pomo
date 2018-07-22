@@ -258,7 +258,7 @@ export default {
         return;
       }
 
-      this.$emit('timerend', {
+      this.$emit('timerstop', {
         isWork: this.isWork,
         msTotal: this.msTotal,
       });

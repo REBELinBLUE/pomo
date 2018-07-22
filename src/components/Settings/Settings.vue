@@ -21,6 +21,14 @@
 
           <vs-divider />
 
+          <h3>Webhooks</h3>
+
+          <TextInput label="Timer Started" v-model="webhooks.start" />
+          <TextInput label="Timer Interrupted" v-model="webhooks.interrupt" />
+          <TextInput label="Timer Ended" v-model="webhooks.end" />
+
+          <vs-divider />
+
           <vs-row>
             <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
               <router-link to="/">
@@ -44,11 +52,13 @@ import { mapMutations } from 'vuex';
 import { SETTINGS_UPDATE } from '@/store/constants';
 import Dropdown from '@/components/Settings/Dropdown.vue';
 import Toggle from '@/components/Settings/Toggle.vue';
+import TextInput from '@/components/Settings/TextInput.vue';
 
 export default {
   name: 'SettingsPanel',
   components: {
     Dropdown,
+    TextInput,
     Toggle,
   },
   props: {
@@ -76,14 +86,14 @@ export default {
     },
     save() {
       this.update({
-        interval: parseInt(this.interval, 10),
-        rest: parseInt(this.rest, 10),
-        long_rest: parseInt(this.long_rest, 10),
-        long_rest_after: parseInt(this.long_rest_after, 10),
-        target: parseInt(this.target, 10),
-        autostart: !!this.autostart,
-        interval_alarm: !!this.interval_alarm,
-        break_alarm: !!this.break_alarm,
+        interval: this.interval,
+        rest: this.rest,
+        long_rest: this.long_rest,
+        long_rest_after: this.long_rest_after,
+        target: this.target,
+        autostart: this.autostart,
+        interval_alarm: this.interval_alarm,
+        break_alarm: this.break_alarm,
       });
     },
   },
@@ -141,3 +151,14 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+h3 {
+  font-size: 100%;
+  font-weight: bolder;
+
+  margin: {
+    bottom: 10px;
+  }
+}
+</style>

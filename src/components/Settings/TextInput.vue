@@ -1,21 +1,16 @@
 <template>
   <div>
     <label>{{ label }}</label>
-    <vs-select v-model="innerValue">
-      <vs-select-item :key="index"
-                      :vs-value="item.value"
-                      :vs-text="item.text" v-for="(item, index) in options" />
-    </vs-select>
+    <vs-input v-model="innerValue" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Dropdown',
+  name: 'TextInput',
   props: {
     label: String,
-    value: Number,
-    options: Array,
+    value: String,
   },
   data() {
     return {
@@ -24,10 +19,10 @@ export default {
   },
   watch: {
     value(val) {
-      this.innerValue = parseInt(val, 10);
+      this.innerValue = val;
     },
     innerValue(val) {
-      this.$emit('input', parseInt(val, 10));
+      this.$emit('input', val);
     },
   },
 };
@@ -42,7 +37,7 @@ div {
     bottom: 10px;
   }
 
-  .con-select {
+  .vs-input {
     float: right;
   }
 }

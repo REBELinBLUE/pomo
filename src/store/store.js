@@ -18,6 +18,11 @@ export default new Vuex.Store({
       autostart: false,
       interval_alarm: true,
       break_alarm: true,
+      webhooks: {
+        start: null,
+        interrupt: null,
+        end: null,
+      },
     })),
   },
   plugins,

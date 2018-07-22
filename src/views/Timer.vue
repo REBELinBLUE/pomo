@@ -10,6 +10,9 @@
            :auto-start="autoStart"
            :interval-alarm="intervalAlarm"
            :break-alarm="breakAlarm"
+           v-on:timerstart="started"
+           v-on:timerstop="stopped"
+           v-on:timerinterrupt="interrupted"
     />
 
     <TaskList :tasks="tasks"
@@ -75,6 +78,27 @@ export default {
 
         return accumulator;
       }, 0);
+    },
+  },
+  methods: {
+    postAction(url, payload) {
+      fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        body: JSON.stringify(payload),
+      }).catch(() => {});
+    },
+    started(payload) {
+      this.postAction(this.$store.state.settings.webhooks.start, payload);
+    },
+    stopped(payload) {
+      this.postAction(this.$store.state.settings.webhooks.end, payload);
+    },
+    interrupted(payload) {
+      this.postAction(this.$store.state.settings.webhooks.interrupt, payload);
     },
   },
 };
