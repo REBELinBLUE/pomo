@@ -2,9 +2,7 @@
   <div>
     <label>{{ label }}</label>
     <vs-select v-model="innerValue">
-      <vs-select-item :key="index"
-                      :vs-value="item.value"
-                      :vs-text="item.text" v-for="(item, index) in options" />
+      <vs-select-item :key="index" :vs-value="item.value" :vs-text="item.text" v-for="(item, index) in options" />
     </vs-select>
   </div>
 </template>

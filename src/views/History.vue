@@ -1,6 +1,5 @@
 <template>
-  <TaskList :tasks="tasks"
-            empty-message="You have not started any tasks yet." />
+  <TaskList :tasks="tasks" empty-message="You have not started any tasks yet." />
 </template>
 
 <script>

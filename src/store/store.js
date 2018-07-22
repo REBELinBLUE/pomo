@@ -27,5 +27,5 @@ export default new Vuex.Store({
   },
   plugins,
   mutations,
-  actions: { }, // TODO: Change to use actions rather than mutations
+  actions: { },
 });

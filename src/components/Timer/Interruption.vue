@@ -1,8 +1,6 @@
 <template>
   <sweet-modal title="Oh no!" ref="interrupt" hide-close-button blocking>
-    <textarea data-gramm_editor="false"
-              placeholder="Why were you interrupted?"
-              v-model="innerValue" />
+    <textarea data-gramm_editor="false" placeholder="Why were you interrupted?" v-model="innerValue" />
 
     <vs-row slot="button">
       <vs-col vs-type="flex" vs-justify="flex-end" vs-align="center" vs-w="12">

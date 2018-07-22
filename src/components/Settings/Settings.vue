@@ -2,10 +2,8 @@
   <vs-row>
     <vs-col vs-offset="4" vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
       <vs-card>
-        <vs-card-header vs-background-color="primary"
-                        vs-title="Settings"
-                        vs-icon="settings"
-                        :vs-fill="true" />
+        <vs-card-header vs-background-color="primary" vs-title="Settings" vs-icon="settings" :vs-fill="true" />
+
         <vs-card-body>
           <Dropdown label="Work Interval" v-model="interval" :options="workOptions" />
           <Dropdown label="Short Break" v-model="rest" :options="restOptions" />

@@ -26,10 +26,7 @@
 
           <vs-divider vs-color="primary" />
 
-          <Task v-for="(task, index) in tasks"
-                :item="task"
-                :index="index"
-                :key="index" />
+          <Task v-for="(task, index) in tasks" :item="task" :index="index" :key="index" />
         </vs-card-body>
         <vs-card-body v-else>
           {{ emptyMessage }}
@@ -71,7 +68,7 @@ export default {
           callback: value => dateFormat(value, 'dd/mm/yy'),
         },
         Description: 'description',
-        //Time: 'time',
+        // Time: 'time',
         Completed: {
           field: 'interrupted',
           callback: value => (value ? 'No' : 'Yes'),

@@ -15,8 +15,7 @@
            v-on:timerinterrupt="interrupted"
     />
 
-    <TaskList :tasks="tasks"
-              empty-message="You have not started any tasks today." />
+    <TaskList :tasks="tasks" empty-message="You have not started any tasks today." />
   </div>
 </template>
 
@@ -82,6 +81,10 @@ export default {
   },
   methods: {
     postAction(url, payload) {
+      if (url === null || url.length === 0) {
+        return;
+      }
+
       fetch(url, {
         method: 'POST',
         mode: 'cors',

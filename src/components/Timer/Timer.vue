@@ -24,9 +24,7 @@
                  :resting="resting" />
       </vs-alert>
 
-      <Interruption v-if="interrupted"
-                    v-model="interruptionReason"
-                    :on-save="done" />
+      <Interruption v-if="interrupted" v-model="interruptionReason" :on-save="done" />
     </vs-col>
   </vs-row>
 </template>
@@ -107,7 +105,6 @@ export default {
     isCounting: false,
     counter: 0,
     endTime: 0,
-    timeout: null,
   }),
   computed: {
     label() {

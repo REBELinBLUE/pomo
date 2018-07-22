@@ -1,6 +1,6 @@
 <template>
   <vs-col vs-type="flex" vs-justify="center" vs-align="center" :vs-w="size">
-    <slot></slot>
+    <slot />
   </vs-col>
 </template>
 

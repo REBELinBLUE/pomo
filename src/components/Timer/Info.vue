@@ -51,9 +51,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss">
-#stats {
-  margin-top: 10px;
-}
-</style>
