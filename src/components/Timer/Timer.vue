@@ -274,9 +274,9 @@ export default {
       this.isWork = !this.isWork;
       this.reset();
 
-      // if (this.autoStart) {
-      //   this.start();
-      // }
+      if (this.autoStart) {
+        setTimeout(this.start.bind(this), 1000);
+      }
     },
     playSound() {
       if (this.shouldPlayAlarm) {
