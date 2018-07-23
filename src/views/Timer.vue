@@ -12,6 +12,7 @@
            :break-alarm="breakAlarm"
            v-on:timerstart="started"
            v-on:timerstop="stopped"
+           v-on:timerskip="skipped"
            v-on:timerinterrupt="interrupted"
     />
 
@@ -96,6 +97,9 @@ export default {
     },
     started(payload) {
       this.postAction(this.$store.state.settings.webhooks.start, payload);
+    },
+    skipped(payload) {
+      this.postAction(this.$store.state.settings.webhooks.end, payload);
     },
     stopped(payload) {
       this.postAction(this.$store.state.settings.webhooks.end, payload);
