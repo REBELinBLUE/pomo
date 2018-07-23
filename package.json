@@ -1,10 +1,15 @@
 {
   "name": "pomodoro",
   "version": "0.1.0",
-  "description": "A pomodoro tracker",
-  "author": "Stephen Ball",
-  "license": "MIT",
-  "homepage": "https://github.com/REBELinBLUE/pomodoro",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "test:unit": "vue-cli-service test:unit",
+    "test:e2e": "vue-cli-service test:e2e",
+    "build:electron": "vue-cli-service build:electron",
+    "serve:electron": "vue-cli-service serve:electron"
+  },
   "dependencies": {
     "dateformat": "^3.0.3",
     "material-icons": "^0.2.3",
@@ -26,20 +31,20 @@
     "@vue/test-utils": "^1.0.0-beta.20",
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
+    "electron": "^2.0.2",
     "faker": "^4.1.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
+    "vue-cli-plugin-electron-builder": "^1.0.0-beta.6",
     "vue-template-compiler": "^2.5.16"
   },
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e"
-  },
+  "main": "dist_electron/bundled/background.js",
+  "description": "A pomodoro tracker",
+  "author": "Stephen Ball",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/REBELinBLUE/pomodoro.git"
-  }
+  },
+  "homepage": "https://github.com/REBELinBLUE/pomodoro"
 }

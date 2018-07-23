@@ -234,7 +234,8 @@ export default {
         msRemaining: this.msRemaining,
       });
 
-      cancelAnimationFrame(this.timeout);
+      // cancelAnimationFrame(this.timeout);
+      clearTimeout(this.timeout);
       this.timeout = null;
 
       this.interrupted = true;
@@ -275,7 +276,7 @@ export default {
       this.reset();
 
       if (this.autoStart) {
-        setTimeout(this.start.bind(this), 1000);
+        setTimeout(this.start.bind(this), MILLISECONDS_SECOND);
       }
     },
     playSound() {
@@ -286,7 +287,8 @@ export default {
       }
     },
     next() {
-      this.timeout = requestAnimationFrame(this.step.bind(this));
+      // this.timeout = requestAnimationFrame(this.step.bind(this));
+      this.timeout = setTimeout(this.step.bind(this), 10);
     },
     step() {
       if (!this.isCounting) {
@@ -314,7 +316,8 @@ export default {
       }
     },
     reset() {
-      cancelAnimationFrame(this.timeout);
+      // cancelAnimationFrame(this.timeout);
+      clearTimeout(this.timeout);
 
       this.init();
     },
@@ -323,7 +326,8 @@ export default {
     this.init();
   },
   beforeDestroy() {
-    cancelAnimationFrame(this.timeout);
+    // cancelAnimationFrame(this.timeout);
+    clearTimeout(this.timeout);
   },
 };
 </script>
