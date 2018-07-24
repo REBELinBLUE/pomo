@@ -1,42 +1,39 @@
 <template>
-  <vs-row>
-    <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
-      <vs-alert vs-active="true" :vs-color="color">
-        <Info v-model="currentTask"
-                :label="label"
-                :resting="resting"
-                :completed="completedCount"
-                :target="targetCount"
-                :failed="failedCount" />
+  <vs-alert vs-active="true" :vs-color="color">
+    <Interruption v-if="interrupted" v-model="interruptionReason" :on-save="done" />
 
-        <Progress :completed="msRemaining"
-                  :total="msTotal"
-                  :completed-color="progressCompletedColor"
-                  :remaining-color="progressRemainingColor">
-          <Countdown :seconds="secondsRemaining" />
-        </Progress>
+    <TaskName v-model="currentTask" />
 
-        <Actions :on-start="start"
-                 :on-interrupt="interrupt"
-                 :on-skip="skip"
-                 :stopped="stopped"
-                 :running="working"
-                 :resting="resting" />
-      </vs-alert>
+    <Progress :completed="msRemaining"
+              :total="msTotal"
+              :completed-color="progressCompletedColor"
+              :remaining-color="progressRemainingColor">
 
-      <Interruption v-if="interrupted" v-model="interruptionReason" :on-save="done" />
-    </vs-col>
-  </vs-row>
+      <h2>{{ label }}</h2>
+
+      <Countdown :label="label" :seconds="secondsRemaining" />
+
+      <Actions :on-start="start"
+               :on-interrupt="interrupt"
+               :on-skip="skip"
+               :stopped="stopped"
+               :running="working"
+               :resting="resting" />
+    </Progress>
+
+    <Summary :completed="completedCount" :target="targetCount" :failed="failedCount" />
+  </vs-alert>
 </template>
 
 <script>
 import { mapMutations } from 'vuex';
 import { ADD_TASK } from '@/store/constants';
-import Info from '@/components/Timer/Info.vue';
 import Countdown from '@/components/Timer/Countdown.vue';
 import Actions from '@/components/Timer/Actions.vue';
 import Interruption from '@/components/Timer/Interruption.vue';
 import Progress from '@/components/Timer/Progress.vue';
+import Summary from '@/components/Timer/Summary.vue';
+import TaskName from '@/components/Timer/TaskName.vue';
 
 const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
@@ -45,11 +42,12 @@ const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 export default {
   name: 'Timer',
   components: {
-    Info,
+    TaskName,
     Progress,
     Countdown,
     Actions,
     Interruption,
+    Summary,
   },
   props: {
     autoStart: {
@@ -234,7 +232,6 @@ export default {
         msRemaining: this.msRemaining,
       });
 
-      // cancelAnimationFrame(this.timeout);
       clearTimeout(this.timeout);
       this.timeout = null;
 
@@ -287,7 +284,6 @@ export default {
       }
     },
     next() {
-      // this.timeout = requestAnimationFrame(this.step.bind(this));
       this.timeout = setTimeout(this.step.bind(this), 10);
     },
     step() {
@@ -316,7 +312,6 @@ export default {
       }
     },
     reset() {
-      // cancelAnimationFrame(this.timeout);
       clearTimeout(this.timeout);
 
       this.init();
@@ -326,7 +321,6 @@ export default {
     this.init();
   },
   beforeDestroy() {
-    // cancelAnimationFrame(this.timeout);
     clearTimeout(this.timeout);
   },
 };
@@ -336,5 +330,8 @@ export default {
 h2 {
   font-size: 150%;
   font-weight: bolder;
+  text-align: center;
+  position: relative;
+  top: 10px;
 }
 </style>

@@ -1,19 +1,29 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Timer</router-link> |
-      <router-link to="/settings">Settings</router-link> |
+      <router-link to="/">Timer</router-link>
+      <router-link to="/settings">Settings</router-link>
       <router-link to="/history">History</router-link>
     </div>
 
     <div id="content">
       <router-view />
     </div>
-
   </div>
 </template>
 
 <style lang="scss">
+.header-arrow {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  margin-left: -5px;
+  height: 10px;
+  width: 10px;
+  transform: rotate(45deg);
+  background-color: rgb(30, 30, 30);
+}
+
 body {
   background-color: #ffffff;
 }
@@ -44,6 +54,8 @@ button {
 
   a {
     font-weight: bold;
+    width: 33%;
+    display: inline-block;
     color: #fff;
     -webkit-app-region: no-drag;
 
@@ -54,8 +66,11 @@ button {
 }
 
 #content {
-  clear: both;
-  margin-top: 50px;
-  margin-bottom: 25px;
+  margin: {
+    top: 55px;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
+  }
 }
 </style>

@@ -1,27 +1,22 @@
 <template>
-  <vs-row>
-    <TableCell size="1">{{ date }}</TableCell>
-    <TableCell size="3">{{ item.description }}</TableCell>
-    <TableCell size="1">{{ minutes | zeroPad }}:{{ seconds | zeroPad }}</TableCell>
-    <TableCell size="2">
-      <vs-chip :vs-icon="icon" :vs-color="color">{{ label }}</vs-chip>
-    </TableCell>
-    <TableCell size="5">{{ item.notes }}</TableCell>
+  <div>
+    <vs-list-item :vs-title="item.description" :vs-subtitle="item.notes">
+      <template slot="avatar">
+        <i :style="{'color':`rgba(var(--${color}),1)`}" class="material-icons  icon-chip">{{icon}}</i>
+      </template>
+      <span>{{ minutes | zeroPad }}:{{ seconds | zeroPad }}</span>
+    </vs-list-item>
     <vs-divider />
-  </vs-row>
+  </div>
 </template>
 
 <script>
 import dateFormat from 'dateformat';
-import TableCell from '@/components/TaskList/TableCell.vue';
 
 const SECONDS_MINUTE = 60;
 
 export default {
   name: 'Task',
-  components: {
-    TableCell,
-  },
   props: {
     item: Object,
   },
@@ -66,9 +61,13 @@ export default {
 </script>
 
 <style scoped>
-.con-vs-chip {
-  margin: -2px 0 0 0 !important;
-  position: absolute;
-  font-weight: bolder;
+.vs-list-item {
+  min-height: 72px;
+}
+.vs-divider {
+  margin: 0px;
+}
+span {
+  padding-right: 20px;
 }
 </style>

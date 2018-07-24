@@ -1,51 +1,31 @@
 <template>
-  <vs-row>
-    <vs-col vs-offset="1" vs-type="flex" vs-justify="center" vs-align="center" vs-w="10">
-      <vs-card>
-        <vs-card-header vs-background-color="primary"
-                        vs-title="Tasks"
-                        vs-icon="alarm"
-                        :vs-fill="true">
-          <json-excel v-if="hasTasks" :data="tasks" :fields="fields" type="csv" :name="filename">
-            <vs-button vs-color="success"
-                       vs-type="filled"
-                       vs-icon="cloud_download"
-                       vs-size="medium"
-                       accesskey="d">Export (.csv)</vs-button>
-          </json-excel>
-        </vs-card-header>
+      <vs-list>
+        <json-excel id="export" v-if="hasTasks" :data="tasks" :fields="fields" type="csv" :name="filename">
+          <vs-button vs-color="success"
+                     vs-type="filled"
+                     vs-icon="cloud_download"
+                     vs-size="medium"
+                     accesskey="d">Export (.csv)</vs-button>
+        </json-excel>
 
-        <vs-card-body v-if="hasTasks">
-          <vs-row>
-            <TableHead size="1">Date</TableHead>
-            <TableHead size="3">Description</TableHead>
-            <TableHead size="1">Time</TableHead>
-            <TableHead size="2">Status</TableHead>
-            <TableHead size="5">Notes</TableHead>
-          </vs-row>
+        <vs-list-header vs-icon="alarm" vs-title="Activity" vs-color="success" />
 
-          <vs-divider vs-color="primary" />
-
+        <template v-if="hasTasks">
+          <!-- FIXME: Show date in the history view -->
           <Task v-for="(task, index) in tasks" :item="task" :index="index" :key="index" />
-        </vs-card-body>
-        <vs-card-body v-else>
-          {{ emptyMessage }}
-        </vs-card-body>
-      </vs-card>
-    </vs-col>
-  </vs-row>
+        </template>
+        <vs-list-item v-else :vs-title="emptyMessage" />
+      </vs-list>
 </template>
 
 <script>
 import dateFormat from 'dateformat';
 import JsonExcel from 'vue-json-excel/JsonExcel.vue';
-import TableHead from '@/components/TaskList/TableHead.vue';
 import Task from '@/components/TaskList/Task.vue';
 
 export default {
   name: 'TaskList',
   components: {
-    TableHead,
     Task,
     JsonExcel,
   },
@@ -88,13 +68,11 @@ export default {
 };
 </script>
 
-<!-- FIXME: Add scoped -->
 <style lang="scss">
-.con-vs-card-header {
-  .vs-button {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-  }
+#export {
+  position: absolute;
+  right: 38px;
+  margin-top: 12px;
+  z-index: 1000;
 }
 </style>

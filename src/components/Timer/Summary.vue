@@ -34,4 +34,7 @@ export default {
   margin: 0 0 0 10px !important;
   font-weight: bolder;
 }
+div {
+  text-align: center;
+}
 </style>

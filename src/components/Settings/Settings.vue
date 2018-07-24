@@ -1,48 +1,44 @@
 <template>
-  <vs-row>
-    <vs-col vs-offset="4" vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
-      <vs-card>
-        <vs-card-header vs-background-color="primary" vs-title="Settings" vs-icon="settings" :vs-fill="true" />
+  <vs-card>
+    <vs-card-header vs-background-color="primary" vs-title="Settings" vs-icon="settings" :vs-fill="true" />
 
-        <vs-card-body>
-          <Dropdown label="Work Interval" v-model="interval" :options="workOptions" />
-          <Dropdown label="Short Break" v-model="rest" :options="restOptions" />
-          <Dropdown label="Long Break" v-model="long_rest" :options="longRestOptions" />
-          <Dropdown label="Long Break After" v-model="long_rest_after" :options="intervalOptions" />
-          <Dropdown label="Target" v-model="target" :options="targetOptions" />
+    <vs-card-body>
+      <Dropdown label="Work Interval" v-model="interval" :options="workOptions" />
+      <Dropdown label="Short Break" v-model="rest" :options="restOptions" />
+      <Dropdown label="Long Break" v-model="long_rest" :options="longRestOptions" />
+      <Dropdown label="Long Break After" v-model="long_rest_after" :options="intervalOptions" />
+      <Dropdown label="Target" v-model="target" :options="targetOptions" />
 
-          <vs-divider />
+      <vs-divider />
 
-          <Toggle label="Auto-Start Timer" v-model="autostart" />
-          <Toggle label="Play Alarm Sound After Work Interval" v-model="interval_alarm" />
-          <Toggle label="Play Alarm Sound After Break" v-model="break_alarm" />
+      <Toggle label="Auto-Start Timer" v-model="autostart" />
+      <Toggle label="Play Alarm Sound After Work Interval" v-model="interval_alarm" />
+      <Toggle label="Play Alarm Sound After Break" v-model="break_alarm" />
 
-          <vs-divider />
+      <vs-divider />
 
-          <h3>Webhooks</h3>
+      <h3>Webhooks</h3>
 
-          <TextInput label="Timer Started" v-model="webhooks.start" />
-          <TextInput label="Timer Interrupted" v-model="webhooks.interrupt" />
-          <TextInput label="Timer Ended" v-model="webhooks.end" />
+      <TextInput label="Timer Started" v-model="webhooks.start" />
+      <TextInput label="Timer Interrupted" v-model="webhooks.interrupt" />
+      <TextInput label="Timer Ended" v-model="webhooks.end" />
 
-          <vs-divider />
+      <vs-divider />
 
-          <vs-row>
-            <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-              <router-link to="/">
-                <vs-button vs-color="success"
-                           vs-type="filled"
-                           vs-icon="save"
-                           vs-size="large"
-                           v-on:click="save"
-                           accesskey="d">Done</vs-button>
-              </router-link>
-            </vs-col>
-          </vs-row>
-        </vs-card-body>
-      </vs-card>
-    </vs-col>
-  </vs-row>
+      <vs-row>
+        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
+          <router-link to="/">
+            <vs-button vs-color="success"
+                       vs-type="filled"
+                       vs-icon="save"
+                       vs-size="large"
+                       v-on:click="save"
+                       accesskey="d">Done</vs-button>
+          </router-link>
+        </vs-col>
+      </vs-row>
+    </vs-card-body>
+  </vs-card>
 </template>
 
 <script>

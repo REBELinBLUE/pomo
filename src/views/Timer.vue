@@ -14,6 +14,7 @@
            v-on:timerstop="stopped"
            v-on:timerskip="skipped"
            v-on:timerinterrupt="interrupted"
+           v-on:timerprogress="progress"
     />
 
     <TaskList :tasks="tasks" empty-message="You have not started any tasks today." />
@@ -21,6 +22,7 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron';
 import dateFormat from 'dateformat';
 import Timer from '@/components/Timer/Timer.vue';
 import TaskList from '@/components/TaskList/TaskList.vue';
@@ -97,15 +99,24 @@ export default {
     },
     started(payload) {
       this.postAction(this.$store.state.settings.webhooks.start, payload);
+      ipcRenderer.send('timer-started', payload);
     },
     skipped(payload) {
       this.postAction(this.$store.state.settings.webhooks.end, payload);
+      ipcRenderer.send('timer-skipped', payload);
     },
     stopped(payload) {
       this.postAction(this.$store.state.settings.webhooks.end, payload);
+      ipcRenderer.send('timer-stopped', payload);
     },
     interrupted(payload) {
       this.postAction(this.$store.state.settings.webhooks.interrupt, payload);
+      ipcRenderer.send('timer-interrupted', payload);
+    },
+    progress(payload) {
+      ipcRenderer.send('timer-progress', {
+        seconds: payload.msRemaining / 1000,
+      });
     },
   },
 };
