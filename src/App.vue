@@ -6,13 +6,20 @@
       <router-link to="/history">History</router-link>
     </div>
 
-    <router-view />
+    <div id="content">
+      <router-view />
+    </div>
+
   </div>
 </template>
 
 <style lang="scss">
 body {
   background-color: #ffffff;
+}
+
+button {
+  -webkit-app-region: no-drag;
 }
 
 #app {
@@ -23,17 +30,32 @@ body {
 }
 
 #nav {
+  -webkit-app-region: drag;
+  height: 40px;
   margin: auto;
   text-align: center;
-  padding: 15px;
+  padding: 10px;
+  background-color: rgb(30, 30, 30);
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  z-index: 1000;
+  color: #fff;
 
   a {
     font-weight: bold;
-    color: #2c3e50;
+    color: #fff;
+    -webkit-app-region: no-drag;
 
     &.router-link-exact-active {
       color: #42b983;
     }
   }
+}
+
+#content {
+  clear: both;
+  margin-top: 50px;
+  margin-bottom: 25px;
 }
 </style>

@@ -11,7 +11,7 @@
                        vs-type="filled"
                        vs-icon="cloud_download"
                        vs-size="medium"
-                       accesskey="d">Download (.csv)</vs-button>
+                       accesskey="d">Export (.csv)</vs-button>
           </json-excel>
         </vs-card-header>
 
