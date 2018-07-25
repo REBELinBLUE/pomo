@@ -15,6 +15,7 @@
            v-on:timerskip="skipped"
            v-on:timerinterrupt="interrupted"
            v-on:timerprogress="progress"
+           v-on:timerreset="reset"
     />
 
     <TaskList :tasks="tasks" empty-message="You have not started any tasks today." />
@@ -98,24 +99,27 @@ export default {
       }).catch(() => {});
     },
     started(payload) {
-      this.postAction(this.$store.state.settings.webhooks.start, payload);
       ipcRenderer.send('timer-started', payload);
+      this.postAction(this.$store.state.settings.webhooks.start, payload);
+    },
+    reset(payload) {
+      ipcRenderer.send('timer-reset', payload);
     },
     skipped(payload) {
-      this.postAction(this.$store.state.settings.webhooks.end, payload);
       ipcRenderer.send('timer-skipped', payload);
+      this.postAction(this.$store.state.settings.webhooks.end, payload);
     },
     stopped(payload) {
-      this.postAction(this.$store.state.settings.webhooks.end, payload);
       ipcRenderer.send('timer-stopped', payload);
+      this.postAction(this.$store.state.settings.webhooks.end, payload);
     },
     interrupted(payload) {
-      this.postAction(this.$store.state.settings.webhooks.interrupt, payload);
       ipcRenderer.send('timer-interrupted', payload);
+      this.postAction(this.$store.state.settings.webhooks.interrupt, payload);
     },
     progress(payload) {
       ipcRenderer.send('timer-progress', {
-        seconds: payload.msRemaining / 1000,
+        msRemaining: payload.msRemaining,
       });
     },
   },

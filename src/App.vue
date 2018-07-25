@@ -13,6 +13,7 @@
 </template>
 
 <style lang="scss">
+  /*
 .header-arrow {
   position: absolute;
   top: 2px;
@@ -23,6 +24,7 @@
   transform: rotate(45deg);
   background-color: rgb(30, 30, 30);
 }
+*/
 
 body {
   background-color: #ffffff;
@@ -49,15 +51,16 @@ button {
   width: 100%;
   position: fixed;
   top: 0px;
-  z-index: 1000;
+  z-index: 2000;
   color: #fff;
+  -webkit-user-select: none;
 
   a {
+    -webkit-app-region: no-drag !important;
     font-weight: bold;
     width: 33%;
     display: inline-block;
     color: #fff;
-    -webkit-app-region: no-drag;
 
     &.router-link-exact-active {
       color: #42b983;

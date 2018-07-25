@@ -1,5 +1,5 @@
 /* eslint-disable */
-import electron, { ipcMain, app, protocol, BrowserWindow, Menu, Tray } from 'electron';
+import electron, { ipcMain, app, protocol, BrowserWindow, Menu, Tray, Notification } from 'electron';
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib';
 import * as path from 'path';
 import { format as formatUrl } from 'url';
@@ -54,6 +54,10 @@ function createMainWindow() {
     mainWindow = null;
   });
 
+  // window.on('blur', () => {
+  //   window.hide();
+  // });
+
   window.webContents.on('devtools-opened', () => {
     window.focus();
     setImmediate(() => {
@@ -81,7 +85,7 @@ const getWindowPosition = () => {
 
 const showWindow = () => {
   const position = getWindowPosition();
-  mainWindow.setPosition(position.x, position.y, false);
+  mainWindow.setPosition(position.x, position.y, true);
   mainWindow.show();
   mainWindow.focus();
 };
@@ -163,8 +167,44 @@ app.on('ready', async () => {
   });
 });
 
-ipcMain.on('timer-progress', (event, payload) => {
-  const { seconds } = payload;
+const setTitleCounter = (msTotal) => {
+  const seconds = msTotal / 1000;
 
   tray.setTitle(`${zeroPad(minutesRemaining(seconds))}:${zeroPad(secondsRemaining(seconds))}`);
+};
+
+ipcMain.on('timer-reset', (event, payload) => {
+  const { msTotal } = payload;
+  setTitleCounter(msTotal);
+});
+
+ipcMain.on('timer-progress', (event, payload) => {
+  const { msRemaining } = payload;
+  setTitleCounter(msRemaining);
+});
+
+// ipcMain.on('timer-skipped', (event, payload) => {
+//   tray.setTitle('');
+// });
+//
+// ipcMain.on('timer-interrupted', (event, payload) => {
+//   // tray.setTitle('');
+// });
+
+ipcMain.on('timer-stopped', (event, payload) => {
+  console.log(payload);
+
+  let message = '🔥 It\'s time to get back to work!';
+  if (payload.isWork) {
+    message = '🎉 It\'s time for a break';
+  }
+
+  const myNotification = new Notification({
+    title: 'Pomodoro Timer',
+    body: message,
+  });
+
+  myNotification.show();
+
+  tray.setTitle('');
 });

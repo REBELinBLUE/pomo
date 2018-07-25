@@ -315,6 +315,11 @@ export default {
       clearTimeout(this.timeout);
 
       this.init();
+
+      this.$emit('timerreset', {
+        isWork: this.isWork,
+        msTotal: this.msTotal,
+      });
     },
   },
   created() {
