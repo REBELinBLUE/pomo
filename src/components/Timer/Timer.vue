@@ -39,6 +39,7 @@ const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 
 // FIXME: Move counter details to state so it continues to work when switching screen
+// FIXME: Timer isn't quite in sync
 export default {
   name: 'Timer',
   components: {
@@ -103,6 +104,7 @@ export default {
     isCounting: false,
     counter: 0,
     endTime: 0,
+    completed: 0,
   }),
   computed: {
     label() {
@@ -180,7 +182,7 @@ export default {
         return false;
       }
 
-      return this.completedCount % this.longRestFrequency === 0;
+      return this.completed % this.longRestFrequency === 0;
     },
   },
   methods: {
@@ -265,6 +267,8 @@ export default {
           time: this.secondsCompleted,
           notes: null,
         });
+
+        this.completed = this.completed + 1;
       }
 
       this.playSound();
@@ -314,16 +318,22 @@ export default {
     reset() {
       clearTimeout(this.timeout);
 
-      this.init();
-
       this.$emit('timerreset', {
         isWork: this.isWork,
         msTotal: this.msTotal,
       });
+
+      this.init();
     },
   },
   created() {
+    this.completed = this.completedCount;
     this.init();
+
+    this.$emit('timercreated', {
+      isWork: this.isWork,
+      msTotal: this.msTotal,
+    });
   },
   beforeDestroy() {
     clearTimeout(this.timeout);

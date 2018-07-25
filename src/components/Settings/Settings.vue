@@ -1,8 +1,5 @@
 <template>
-  <vs-card>
-    <vs-card-header vs-background-color="primary" vs-title="Settings" vs-icon="settings" :vs-fill="true" />
-
-    <vs-card-body>
+  <vs-alert vs-active="true" vs-color="dark">
       <Dropdown label="Work Interval" v-model="interval" :options="workOptions" />
       <Dropdown label="Short Break" v-model="rest" :options="restOptions" />
       <Dropdown label="Long Break" v-model="long_rest" :options="longRestOptions" />
@@ -22,23 +19,7 @@
       <TextInput label="Timer Started" v-model="webhooks.start" />
       <TextInput label="Timer Interrupted" v-model="webhooks.interrupt" />
       <TextInput label="Timer Ended" v-model="webhooks.end" />
-
-      <vs-divider />
-
-      <vs-row>
-        <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
-          <router-link to="/">
-            <vs-button vs-color="success"
-                       vs-type="filled"
-                       vs-icon="save"
-                       vs-size="large"
-                       v-on:click="save"
-                       accesskey="d">Done</vs-button>
-          </router-link>
-        </vs-col>
-      </vs-row>
-    </vs-card-body>
-  </vs-card>
+  </vs-alert>
 </template>
 
 <script>
@@ -78,18 +59,18 @@ export default {
 
       return options;
     },
-    save() {
-      this.update({
-        interval: this.interval,
-        rest: this.rest,
-        long_rest: this.long_rest,
-        long_rest_after: this.long_rest_after,
-        target: this.target,
-        autostart: this.autostart,
-        interval_alarm: this.interval_alarm,
-        break_alarm: this.break_alarm,
-      });
-    },
+  },
+  beforeDestroy() {
+    this.update({
+      interval: this.interval,
+      rest: this.rest,
+      long_rest: this.long_rest,
+      long_rest_after: this.long_rest_after,
+      target: this.target,
+      autostart: this.autostart,
+      interval_alarm: this.interval_alarm,
+      break_alarm: this.break_alarm,
+    });
   },
   computed: {
     workOptions() {

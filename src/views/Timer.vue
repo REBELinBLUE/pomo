@@ -15,7 +15,8 @@
            v-on:timerskip="skipped"
            v-on:timerinterrupt="interrupted"
            v-on:timerprogress="progress"
-           v-on:timerreset="reset"
+           v-on:timercreated="init"
+           v-on:timerreset="init"
     />
 
     <TaskList :tasks="tasks" empty-message="You have not started any tasks today." />
@@ -98,12 +99,12 @@ export default {
         body: JSON.stringify(payload),
       }).catch(() => {});
     },
-    started(payload) {
+    started(payload) { // FIXME: Figure out some way to not include these when running outside of electron
       ipcRenderer.send('timer-started', payload);
       this.postAction(this.$store.state.settings.webhooks.start, payload);
     },
-    reset(payload) {
-      ipcRenderer.send('timer-reset', payload);
+    init(payload) {
+      ipcRenderer.send('timer-init', payload);
     },
     skipped(payload) {
       ipcRenderer.send('timer-skipped', payload);
@@ -118,9 +119,7 @@ export default {
       this.postAction(this.$store.state.settings.webhooks.interrupt, payload);
     },
     progress(payload) {
-      ipcRenderer.send('timer-progress', {
-        msRemaining: payload.msRemaining,
-      });
+      ipcRenderer.send('timer-progress', payload);
     },
   },
 };

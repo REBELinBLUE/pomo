@@ -71,7 +71,7 @@ export default {
 <style lang="scss">
 #export {
   position: absolute;
-  right: 38px;
+  right: 20px;
   margin-top: 12px;
   z-index: 1000;
 }

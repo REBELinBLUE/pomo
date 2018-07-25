@@ -6,6 +6,7 @@ import { TASKS_STORAGE_KEY, SETTINGS_STORAGE_KEY } from './constants';
 
 Vue.use(Vuex);
 
+// FIXME: Change to use indexeddb or sqlite
 export default new Vuex.Store({
   state: {
     tasks: JSON.parse(window.localStorage.getItem(TASKS_STORAGE_KEY) || '[]'),

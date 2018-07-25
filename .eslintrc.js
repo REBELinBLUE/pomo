@@ -18,6 +18,9 @@ module.exports = {
       ]
     }],
   },
+  globals: {
+    '__static': true,
+  },
   parserOptions: {
     parser: 'babel-eslint'
   }
