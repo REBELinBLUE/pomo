@@ -2,7 +2,7 @@
   <div>
     <vs-list-item :vs-title="item.description" :vs-subtitle="item.notes">
       <template slot="avatar">
-        <i :style="{'color':`rgba(var(--${color}),1)`}" class="material-icons  icon-chip">{{icon}}</i>
+        <Icon :icon="icon" :color="color" />
       </template>
       <span>{{ minutes | zeroPad }}:{{ seconds | zeroPad }}</span>
     </vs-list-item>
@@ -12,11 +12,15 @@
 
 <script>
 import dateFormat from 'dateformat';
+import Icon from '@/components/Icon.vue';
 
 const SECONDS_MINUTE = 60;
 
 export default {
   name: 'Task',
+  components: {
+    Icon,
+  },
   props: {
     item: Object,
   },
@@ -60,7 +64,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .vs-list-item {
   min-height: 72px;
 }

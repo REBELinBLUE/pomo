@@ -29,7 +29,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .con-vs-chip {
   margin: 0 0 0 10px !important;
   font-weight: bolder;

@@ -7,6 +7,7 @@ import zeroPad from './filters/zeroPad';
 import minutesRemaining from './filters/minutesRemaining';
 import secondsRemaining from './filters/secondsRemaining';
 import contextMenu from './electron/contextMenu';
+// const hid = require('node-hid');
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
@@ -65,6 +66,9 @@ app.on('ready', async () => {
     // Install Vue Devtools
     await installVueDevtools();
   }
+
+
+  //console.log(hid.devices());
 
   mainWindow = createMainWindow();
 

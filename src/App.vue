@@ -1,13 +1,9 @@
 <template>
   <div id="app">
     <div id="nav">
-      <!--<router-link to="/" tag="button">Timer</router-link>-->
-      <!--<router-link to="/settings" tag="button">Settings</router-link>-->
-      <!--<router-link to="/history" tag="button">History</router-link>-->
-
-      <router-link to="/" tag="button"><i class="material-icons">alarm</i></router-link> <!-- Icon is causing misalignment -->
-      <router-link to="/settings" tag="button"><i class="material-icons">settings</i></router-link>
-      <router-link to="/history" tag="button"><i class="material-icons">history</i></router-link>
+      <router-link to="/" tag="button"><Icon icon="alarm" /></router-link>
+      <router-link to="/history" tag="button"><Icon icon="history" /></router-link>
+      <router-link to="/settings" tag="button"><Icon icon="settings" /></router-link>
     </div>
 
     <div id="content">
@@ -15,6 +11,17 @@
     </div>
   </div>
 </template>
+
+<script>
+import Icon from '@/components/Icon.vue';
+
+export default {
+  name: 'App',
+  components: {
+    Icon,
+  },
+};
+</script>
 
 <style lang="scss">
 body {

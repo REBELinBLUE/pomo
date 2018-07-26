@@ -9,11 +9,13 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "build:electron": "vue-cli-service build:electron",
-    "serve:electron": "vue-cli-service serve:electron"
+    "serve:electron": "vue-cli-service serve:electron",
+    "postinstall": "electron-rebuild --force"
   },
   "dependencies": {
     "dateformat": "^3.0.3",
     "material-icons": "^0.2.3",
+    "node-hid": "^0.7.3",
     "sweet-modal-vue": "^2.0.0",
     "vue": "^2.5.16",
     "vue-json-excel": "^0.2.5",
@@ -33,6 +35,7 @@
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "electron": "^2.0.2",
+    "electron-rebuild": "^1.8.1",
     "faker": "^4.1.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
