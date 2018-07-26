@@ -1,15 +1,15 @@
 <template>
-  <sweet-modal title="Oh no!" ref="interrupt" hide-close-button blocking>
-    <textarea data-gramm_editor="false" placeholder="Why were you interrupted?" v-model="innerValue" />
+  <sweet-modal ref="interrupt" title="Oh no!" hide-close-button blocking>
+    <textarea v-model="innerValue" data-gramm_editor="false" placeholder="Why were you interrupted?" />
 
     <vs-row slot="button">
       <vs-col vs-type="flex" vs-justify="flex-end" vs-align="center" vs-w="12">
         <vs-button vs-color="danger"
                    vs-type="filled"
-                   v-on:click="done"
                    vs-icon="save"
                    vs-size="large"
-                   accesskey="d">Done</vs-button>
+                   accesskey="d"
+                   v-on:click="done">Done</vs-button>
       </vs-col>
     </vs-row>
   </sweet-modal>
@@ -24,8 +24,14 @@ export default {
     SweetModal,
   },
   props: {
-    onSave: Function,
-    value: String,
+    onSave: {
+      type: Function,
+      required: true,
+    },
+    value: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -40,6 +46,9 @@ export default {
       this.$emit('input', val);
     },
   },
+  mounted() {
+    this.$refs.interrupt.open();
+  },
   methods: {
     done() {
       if (this.innerValue === null || this.innerValue.trim().length === 0) {
@@ -51,9 +60,6 @@ export default {
 
       this.onSave();
     },
-  },
-  mounted() {
-    this.$refs.interrupt.open();
   },
 };
 </script>

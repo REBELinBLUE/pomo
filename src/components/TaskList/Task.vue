@@ -22,7 +22,10 @@ export default {
     Icon,
   },
   props: {
-    item: Object,
+    item: {
+      type: Object, // FIXME: Can we make a task object type?
+      required: true,
+    },
   },
   computed: {
     date() {

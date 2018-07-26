@@ -1,5 +1,5 @@
 <template>
-  <vs-alert vs-active="true" :vs-color="color">
+  <vs-alert :vs-color="color" vs-active="true">
     <Interruption v-if="interrupted" v-model="interruptionReason" :on-save="done" />
 
     <TaskName v-model="currentTask" />
@@ -185,6 +185,18 @@ export default {
       return this.completed % this.longRestFrequency === 0;
     },
   },
+  created() {
+    this.completed = this.completedCount;
+    this.init();
+
+    this.$emit('timercreated', {
+      isWork: this.isWork,
+      msTotal: this.msTotal,
+    });
+  },
+  beforeDestroy() {
+    clearTimeout(this.timeout);
+  },
   methods: {
     ...mapMutations({
       addTask: ADD_TASK,
@@ -325,18 +337,6 @@ export default {
 
       this.init();
     },
-  },
-  created() {
-    this.completed = this.completedCount;
-    this.init();
-
-    this.$emit('timercreated', {
-      isWork: this.isWork,
-      msTotal: this.msTotal,
-    });
-  },
-  beforeDestroy() {
-    clearTimeout(this.timeout);
   },
 };
 </script>

@@ -1,16 +1,16 @@
 <template>
   <vs-alert vs-active="true" vs-color="dark">
-      <Dropdown label="Work Interval" v-model="interval" :options="workOptions" />
-      <Dropdown label="Short Break" v-model="rest" :options="restOptions" />
-      <Dropdown label="Long Break" v-model="long_rest" :options="longRestOptions" />
-      <Dropdown label="Long Break After" v-model="long_rest_after" :options="intervalOptions" />
-      <Dropdown label="Target" v-model="target" :options="targetOptions" />
+    <Dropdown v-model="interval" :options="workOptions" label="Work Interval" />
+    <Dropdown v-model="rest" :options="restOptions" label="Short Break" />
+    <Dropdown v-model="long_rest" :options="longRestOptions" label="Long Break" />
+    <Dropdown v-model="long_rest_after" :options="intervalOptions" label="Long Break After" />
+    <Dropdown v-model="target" :options="targetOptions" label="Target" />
 
-      <vs-divider />
+    <vs-divider />
 
-      <Toggle label="Auto-Start Timer" v-model="autostart" />
-      <Toggle label="Play Alarm Sound After Work Interval" v-model="interval_alarm" />
-      <Toggle label="Play Alarm Sound After Break" v-model="break_alarm" />
+    <Toggle v-model="autostart" label="Auto-Start Timer" />
+    <Toggle v-model="interval_alarm" label="Play Alarm Sound After Work Interval" />
+    <Toggle v-model="break_alarm" label="Play Alarm Sound After Break" />
   </vs-alert>
 </template>
 
@@ -27,40 +27,13 @@ export default {
     Toggle,
   },
   props: {
-    settings: Object,
+    settings: {
+      type: Object, // FIXME: Can we make a settings object type?
+      required: true,
+    },
   },
   data() {
     return this.settings;
-  },
-  methods: {
-    ...mapMutations({
-      update: SETTINGS_UPDATE,
-    }),
-    generateOptions: ({
-      min, max, increment, label,
-    }) => {
-      const options = [];
-      for (let value = min; value <= max; value += increment) {
-        options.push({
-          text: `${value} ${label}`,
-          value,
-        });
-      }
-
-      return options;
-    },
-  },
-  beforeDestroy() {
-    this.update({
-      interval: this.interval,
-      rest: this.rest,
-      long_rest: this.long_rest,
-      long_rest_after: this.long_rest_after,
-      target: this.target,
-      autostart: this.autostart,
-      interval_alarm: this.interval_alarm,
-      break_alarm: this.break_alarm,
-    });
   },
   computed: {
     workOptions() {
@@ -112,6 +85,36 @@ export default {
         increment: 5,
         label,
       }));
+    },
+  },
+  beforeDestroy() {
+    this.update({
+      interval: this.interval,
+      rest: this.rest,
+      long_rest: this.long_rest,
+      long_rest_after: this.long_rest_after,
+      target: this.target,
+      autostart: this.autostart,
+      interval_alarm: this.interval_alarm,
+      break_alarm: this.break_alarm,
+    });
+  },
+  methods: {
+    ...mapMutations({
+      update: SETTINGS_UPDATE,
+    }),
+    generateOptions: ({
+      min, max, increment, label,
+    }) => {
+      const options = [];
+      for (let value = min; value <= max; value += increment) {
+        options.push({
+          text: `${value} ${label}`,
+          value,
+        });
+      }
+
+      return options;
     },
   },
 };

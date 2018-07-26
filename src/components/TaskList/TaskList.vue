@@ -1,21 +1,21 @@
 <template>
-      <vs-list>
-        <json-excel id="export" v-if="hasTasks" :data="tasks" :fields="fields" type="csv" :name="filename">
-          <vs-button vs-color="success"
-                     vs-type="filled"
-                     vs-icon="cloud_download"
-                     vs-size="medium"
-                     accesskey="d">Export (.csv)</vs-button>
-        </json-excel>
+  <vs-list>
+    <json-excel v-if="hasTasks" id="export" :data="tasks" :fields="fields" :name="filename" type="csv">
+      <vs-button vs-color="success"
+                 vs-type="filled"
+                 vs-icon="cloud_download"
+                 vs-size="medium"
+                 accesskey="d">Export (.csv)</vs-button>
+    </json-excel>
 
-        <vs-list-header vs-icon="alarm" vs-title="Activity" vs-color="success" />
+    <vs-list-header vs-icon="alarm" vs-title="Activity" vs-color="success" />
 
-        <template v-if="hasTasks">
-          <!-- FIXME: Show date in the history view -->
-          <Task v-for="(task, index) in tasks" :item="task" :index="index" :key="index" />
-        </template>
-        <vs-list-item v-else :vs-title="emptyMessage" />
-      </vs-list>
+    <template v-if="hasTasks">
+      <!-- FIXME: Show date in the history view -->
+      <Task v-for="(task, index) in tasks" :item="task" :index="index" :key="index" />
+    </template>
+    <vs-list-item v-else :vs-title="emptyMessage" />
+  </vs-list>
 </template>
 
 <script>

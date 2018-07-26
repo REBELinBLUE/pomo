@@ -3,9 +3,9 @@
     <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="12">
       <radial-progress-bar :completed-steps="completed"
                            :total-steps="total"
-                           :animateSpeed=500
-                           :stroke-width=9
-                           :diameter=350
+                           :animate-speed="500"
+                           :stroke-width="9"
+                           :diameter="350"
                            :inner-stroke-color="completedColor"
                            :start-color="remainingColor"
                            :stop-color="remainingColor">
@@ -35,10 +35,12 @@ export default {
     total: {
       type: Number,
       required: false,
+      default: 100,
     },
     completed: {
       type: Number,
       required: false,
+      default: 0,
     },
   },
 };

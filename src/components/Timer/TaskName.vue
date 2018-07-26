@@ -1,12 +1,15 @@
 <template>
-  <vs-input class="task-name" vs-icon="alarm" placeholder="Enter task name..." v-model="innerValue" />
+  <vs-input v-model="innerValue" class="task-name" vs-icon="alarm" placeholder="Enter task name..." />
 </template>
 
 <script>
 export default {
   name: 'TaskName',
   props: {
-    label: String,
+    label: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {

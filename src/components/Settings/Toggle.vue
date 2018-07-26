@@ -9,8 +9,14 @@
 export default {
   name: 'Toggle',
   props: {
-    label: String,
-    value: Boolean,
+    label: {
+      type: String,
+      required: true,
+    },
+    value: {
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
     return {

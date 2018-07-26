@@ -2,7 +2,7 @@
   <div>
     <label>{{ label }}</label>
     <vs-select v-model="innerValue">
-      <vs-select-item :key="index" :vs-value="item.value" :vs-text="item.text" v-for="(item, index) in options" />
+      <vs-select-item v-for="(item, index) in options" :key="index" :vs-value="item.value" :vs-text="item.text" />
     </vs-select>
   </div>
 </template>
@@ -11,9 +11,18 @@
 export default {
   name: 'Dropdown',
   props: {
-    label: String,
-    value: Number,
-    options: Array,
+    label: {
+      type: String,
+      required: true,
+    },
+    value: {
+      type: Number,
+      required: true,
+    },
+    options: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {

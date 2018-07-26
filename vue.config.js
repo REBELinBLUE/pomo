@@ -1,5 +1,6 @@
 module.exports = {
   baseUrl: '/',
+
   pluginOptions: {
     electronBuilder: {
       chainWebpackMainProcess: (config) => {
@@ -12,4 +13,6 @@ module.exports = {
       },
     },
   },
+
+  lintOnSave: undefined,
 };

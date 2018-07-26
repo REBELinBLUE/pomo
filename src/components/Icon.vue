@@ -1,5 +1,5 @@
 <template>
-  <i class="material-icons" :style="{'color':`rgba(var(--${color}),1)`}">{{ icon }}</i>
+  <i :style="{'color':`rgba(var(--${color}),1)`}" class="material-icons">{{ icon }}</i>
 </template>
 
 <script>
