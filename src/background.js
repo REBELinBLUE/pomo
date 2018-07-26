@@ -1,12 +1,12 @@
 import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'; // eslint-disable-line
-import { ipcMain, app, protocol, Tray, Notification, NotificationAction } from 'electron'; // eslint-disable-line
+import { ipcMain, app, protocol, Tray, Notification } from 'electron'; // eslint-disable-line
 import * as path from 'path';
+import createMainWindow, { positionWindowBelowTray } from './electron/window';
+import isDevelopment from './electron/isDevelopment';
 import zeroPad from './filters/zeroPad';
 import minutesRemaining from './filters/minutesRemaining';
 import secondsRemaining from './filters/secondsRemaining';
 import contextMenu from './electron/contextMenu';
-import createMainWindow, { positionWindowBelowTray } from './electron/window';
-import isDevelopment from './electron/isDevelopment';
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;

@@ -28,6 +28,10 @@ export default {
       this.$emit('input', parseInt(val, 10));
     },
   },
+  beforeDestroy() {
+    // FIXME: This is due to a bug in vuesax
+    this.$children[0].$refs.vsSelectOptions.remove();
+  },
 };
 </script>
 
