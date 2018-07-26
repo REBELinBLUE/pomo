@@ -6,7 +6,7 @@ import isDevelopment from './isDevelopment';
 
 export default function createMainWindow() {
   let appWindow = new BrowserWindow({
-    width: 435,
+    width: 440,
     height: 730,
     resizable: false,
     minimizable: false,

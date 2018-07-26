@@ -1,6 +1,6 @@
 {
-  "name": "pomodoro",
-  "productName": "Pomodoro Timer",
+  "name": "@rebelinblue/pomo",
+  "productName": "Pomo",
   "version": "0.1.0",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,7 +10,7 @@
     "test:e2e": "vue-cli-service test:e2e",
     "build:electron": "vue-cli-service build:electron",
     "serve:electron": "vue-cli-service serve:electron",
-    "postinstall": "electron-rebuild --force"
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "dateformat": "^3.0.3",
@@ -35,7 +35,6 @@
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "electron": "^2.0.2",
-    "electron-rebuild": "^1.8.1",
     "faker": "^4.1.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
@@ -44,11 +43,29 @@
   },
   "main": "dist_electron/bundled/background.js",
   "description": "A pomodoro tracker",
-  "author": "Stephen Ball",
+  "author": "Stephen Ball <stephen@rebelinblue.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/REBELinBLUE/pomodoro.git"
   },
-  "homepage": "https://github.com/REBELinBLUE/pomodoro"
+  "homepage": "https://github.com/REBELinBLUE/pomodoro",
+  "keywords": [
+    "pomodoro",
+    "node-luxafor",
+    "vue",
+    "electron"
+  ],
+  "build": {
+    "appId": "com.rebelinblue.pomodoro",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "resources/icon.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    }
+  }
 }

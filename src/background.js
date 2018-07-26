@@ -9,6 +9,8 @@ import minutesRemaining from './filters/minutesRemaining';
 import secondsRemaining from './filters/secondsRemaining';
 import contextMenu from './electron/contextMenu';
 
+const resourcesDirectory = path.join(__dirname, 'resources');
+
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
 let tray;
@@ -77,7 +79,7 @@ app.on('ready', async () => {
 
   mainWindow = createMainWindow();
 
-  tray = new Tray(path.join(__static, 'icon.png'));
+  tray = new Tray(path.join(__static, 'icon.png')); // FIXME: Figure out how to move these to the resources dir
   tray.setTitle('00:00');
   tray.on('click', toggleWindow);
   tray.on('right-click', () => tray.popUpContextMenu(contextMenu));

@@ -6,9 +6,10 @@
 export default {
   name: 'TaskName',
   props: {
-    label: {
+    label: { // FIXME: Placeholder isn't working due to a bug in vuesax
       type: String,
-      required: true,
+      required: false,
+      default: '',
     },
   },
   data() {
