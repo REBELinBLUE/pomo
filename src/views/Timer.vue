@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron'; // eslint-disable-line
 import dateFormat from 'dateformat';
 import Timer from '@/components/Timer/Timer.vue';
 import TaskList from '@/components/TaskList/TaskList.vue';
