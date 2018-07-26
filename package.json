@@ -15,7 +15,7 @@
   "dependencies": {
     "dateformat": "^3.0.3",
     "material-icons": "^0.2.3",
-    "node-hid": "^0.7.3",
+    "node-luxafor": "^2.1.0",
     "sweet-modal-vue": "^2.0.0",
     "vue": "^2.5.16",
     "vue-json-excel": "^0.2.5",

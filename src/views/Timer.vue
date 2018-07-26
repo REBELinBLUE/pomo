@@ -85,38 +85,20 @@ export default {
     },
   },
   methods: {
-    postAction(url, payload) {
-      if (url === null || url.length === 0) {
-        return;
-      }
-
-      fetch(url, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-        body: JSON.stringify(payload),
-      }).catch(() => {});
-    },
     started(payload) { // FIXME: Figure out some way to not include these when running outside of electron
       ipcRenderer.send('timer-started', payload);
-      this.postAction(this.$store.state.settings.webhooks.start, payload);
     },
     init(payload) {
       ipcRenderer.send('timer-init', payload);
     },
     skipped(payload) {
       ipcRenderer.send('timer-skipped', payload);
-      this.postAction(this.$store.state.settings.webhooks.end, payload);
     },
     stopped(payload) {
       ipcRenderer.send('timer-stopped', payload);
-      this.postAction(this.$store.state.settings.webhooks.end, payload);
     },
     interrupted(payload) {
       ipcRenderer.send('timer-interrupted', payload);
-      this.postAction(this.$store.state.settings.webhooks.interrupt, payload);
     },
     progress(payload) {
       ipcRenderer.send('timer-progress', payload);

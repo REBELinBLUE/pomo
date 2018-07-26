@@ -11,14 +11,6 @@
       <Toggle label="Auto-Start Timer" v-model="autostart" />
       <Toggle label="Play Alarm Sound After Work Interval" v-model="interval_alarm" />
       <Toggle label="Play Alarm Sound After Break" v-model="break_alarm" />
-
-      <vs-divider />
-
-      <h3>Webhooks</h3>
-
-      <TextInput label="Timer Started" v-model="webhooks.start" />
-      <TextInput label="Timer Interrupted" v-model="webhooks.interrupt" />
-      <TextInput label="Timer Ended" v-model="webhooks.end" />
   </vs-alert>
 </template>
 
@@ -27,13 +19,11 @@ import { mapMutations } from 'vuex';
 import { SETTINGS_UPDATE } from '@/store/constants';
 import Dropdown from '@/components/Settings/Dropdown.vue';
 import Toggle from '@/components/Settings/Toggle.vue';
-import TextInput from '@/components/Settings/TextInput.vue';
 
 export default {
   name: 'SettingsPanel',
   components: {
     Dropdown,
-    TextInput,
     Toggle,
   },
   props: {

@@ -3,15 +3,16 @@ import { ipcMain, app, protocol, Tray, Notification } from 'electron'; // eslint
 import * as path from 'path';
 import createMainWindow, { positionWindowBelowTray } from './electron/window';
 import isDevelopment from './electron/isDevelopment';
+import light from './electron/light';
 import zeroPad from './filters/zeroPad';
 import minutesRemaining from './filters/minutesRemaining';
 import secondsRemaining from './filters/secondsRemaining';
 import contextMenu from './electron/contextMenu';
-// const hid = require('node-hid');
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
 let tray;
+let timeout;
 
 const showWindow = () => {
   positionWindowBelowTray(mainWindow, tray);
@@ -60,6 +61,10 @@ protocol.registerStandardSchemes(['app'], { secure: true });
 //   }
 // });
 
+app.on('quit', () => {
+  light.reset();
+});
+
 // create main BrowserWindow when electron is ready
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
@@ -67,8 +72,8 @@ app.on('ready', async () => {
     await installVueDevtools();
   }
 
-
-  //console.log(hid.devices());
+  light.connect();
+  light.setColour('orange');
 
   mainWindow = createMainWindow();
 
@@ -79,6 +84,31 @@ app.on('ready', async () => {
 });
 
 app.dock.hide();
+
+ipcMain.on('timer-started', (event, payload) => {
+  clearTimeout(timeout);
+
+  if (payload.isWork) {
+    light.setColour('red');
+    return;
+  }
+
+  light.setColour('green');
+});
+
+ipcMain.on('timer-skipped', () => {
+  light.setColour('orange');
+});
+
+ipcMain.on('timer-interrupted', () => {
+  // Police lights
+  light.setPattern('police');
+
+  timeout = setTimeout(() => {
+    // Orange
+    light.setColour('orange');
+  }, 5000);
+});
 
 ipcMain.on('timer-init', (event, payload) => {
   const { msTotal } = payload;
@@ -91,6 +121,8 @@ ipcMain.on('timer-progress', (event, payload) => {
 });
 
 ipcMain.on('timer-stopped', (event, payload) => {
+  light.setColour('orange');
+
   let title = 'It\'s time to get back to work!';
   let body = '🔥🔥🔥🔥🔥🔥';
   if (payload.isWork) {
