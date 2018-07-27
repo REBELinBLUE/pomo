@@ -1,6 +1,6 @@
 {
   "name": "@rebelinblue/pomo",
-  "productName": "Pomo",
+  "productName": "POMO",
   "version": "0.1.0",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -57,7 +57,7 @@
     "electron"
   ],
   "build": {
-    "appId": "com.rebelinblue.pomodoro",
+    "appId": "com.rebelinblue.pomo",
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "mac": {
       "category": "public.app-category.productivity",
