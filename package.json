@@ -1,6 +1,6 @@
 {
   "name": "@rebelinblue/pomo",
-  "productName": "POMO",
+  "productName": "Pomo",
   "version": "0.1.0",
   "scripts": {
     "serve": "vue-cli-service serve",
