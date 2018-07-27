@@ -1,5 +1,5 @@
 import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'; // eslint-disable-line
-import { ipcMain, app, protocol, Tray, Notification } from 'electron'; // eslint-disable-line
+import { ipcMain, app, protocol, Tray, Notification, nativeImage } from 'electron'; // eslint-disable-line
 import * as path from 'path';
 import createMainWindow, { positionWindowBelowTray } from './electron/window';
 import isDevelopment from './electron/isDevelopment';
@@ -9,12 +9,14 @@ import minutesRemaining from './filters/minutesRemaining';
 import secondsRemaining from './filters/secondsRemaining';
 import contextMenu from './electron/contextMenu';
 
-const resourcesDirectory = path.join(__dirname, 'resources');
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
 let tray;
 let timeout;
+const filled = nativeImage.createFromPath(path.join(__static, 'filled.png'));
+const inverted = nativeImage.createFromPath(path.join(__static, 'invert.png'));
+// const emptied = nativeImage.createFromPath(path.join(__static, 'empty.png'));
 
 const showWindow = () => {
   positionWindowBelowTray(mainWindow, tray);
@@ -79,7 +81,8 @@ app.on('ready', async () => {
 
   mainWindow = createMainWindow();
 
-  tray = new Tray(path.join(__static, 'icon.png')); // FIXME: Figure out how to move these to the resources dir
+  tray = new Tray(filled); // FIXME: Figure out how to move these to the resources dir
+  tray.setPressedImage(inverted);
   tray.setTitle('00:00');
   tray.on('click', toggleWindow);
   tray.on('right-click', () => tray.popUpContextMenu(contextMenu));
@@ -92,8 +95,11 @@ ipcMain.on('timer-started', (event, payload) => {
 
   if (payload.isWork) {
     light.setColour('red');
+    // tray.setImage(filled);
     return;
   }
+
+  // tray.setImage(emptied);
 
   light.setColour('green');
 });
@@ -127,9 +133,11 @@ ipcMain.on('timer-stopped', (event, payload) => {
 
   let title = 'It\'s time to get back to work!';
   let body = '🔥🔥🔥🔥🔥🔥';
+  // tray.setImage(emptied);
   if (payload.isWork) {
     title = 'It\'s time for a break';
     body = '🎉🎉🎉🎉🎉🎉';
+    // tray.setImage(filled);
   }
 
   const myNotification = new Notification({
