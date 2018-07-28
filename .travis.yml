@@ -2,8 +2,10 @@ sudo: false
 
 language: node_js
 
-#before_install:
-#  - npm install -g npm-check
+before_install:
+# - npm install -g npm-check
+  - sudo apt-get update -y
+  - sudo apt-get install libudev-dev libusb-1.0.0-dev libstdc++6 -y
 
 install:
   - npm install
