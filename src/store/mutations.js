@@ -1,16 +1,16 @@
-import dateFormat from 'dateformat';
-import { ADD_TASK, SETTINGS_UPDATE } from './constants';
+import { ADD_TASK, SETTINGS_UPDATE, LOAD_TODAYS_TASKS, LOAD_OLD_TASKS } from './constants';
 
 export default {
   [ADD_TASK](state, task) {
-    state.tasks.push({
-      date: dateFormat(new Date(), 'isoDateTime'),
-      interrupted: false,
-      // description: undefined,
-      // time: undefined,
-      notes: null,
-      ...task,
-    });
+    state.tasks.today.push(task);
+  },
+
+  [LOAD_TODAYS_TASKS](state, tasks) {
+    state.tasks.today = tasks;
+  },
+
+  [LOAD_OLD_TASKS](state, tasks) {
+    state.tasks.old = tasks;
   },
 
   [SETTINGS_UPDATE](state, settings) {
@@ -19,6 +19,4 @@ export default {
       ...settings,
     };
   },
-
-
 };

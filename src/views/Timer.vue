@@ -24,8 +24,9 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import { ipcRenderer } from 'electron'; // eslint-disable-line
-import dateFormat from 'dateformat';
+import { LOAD_TODAYS_TASKS } from '@/store/constants';
 import Timer from '@/components/Timer/Timer.vue';
 import TaskList from '@/components/TaskList/TaskList.vue';
 
@@ -44,27 +45,7 @@ export default {
     autoStart() { return this.$store.state.settings.autostart; },
     intervalAlarm() { return this.$store.state.settings.interval_alarm; },
     breakAlarm() { return this.$store.state.settings.break_alarm; },
-    tasks() {
-      const { tasks } = this.$store.state;
-      const today = dateFormat(new Date(), 'isoDate');
-
-      return tasks
-        .filter(task => dateFormat(new Date(task.date), 'isoDate') === today)
-        .sort((a, b) => {
-          const firstDate = new Date(a.date);
-          const secondDate = new Date(b.date);
-
-          if (firstDate < secondDate) {
-            return 1;
-          }
-
-          if (firstDate > secondDate) {
-            return -1;
-          }
-
-          return 0;
-        });
-    },
+    tasks() { return this.$store.state.tasks.today; },
     completedCount() {
       return this.tasks.reduce((accumulator, task) => {
         if (!task.interrupted) {
@@ -84,7 +65,13 @@ export default {
       }, 0);
     },
   },
+  beforeMount() {
+    this.loadTasks();
+  },
   methods: {
+    ...mapActions({
+      loadTasks: LOAD_TODAYS_TASKS,
+    }),
     started(payload) { // FIXME: Figure out some way to not include these when running outside of electron
       ipcRenderer.send('timer-started', payload);
     },

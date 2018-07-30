@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 import { ADD_TASK } from '@/store/constants';
 import Countdown from '@/components/Timer/Countdown.vue';
 import Actions from '@/components/Timer/Actions.vue';
@@ -197,7 +197,7 @@ export default {
     clearTimeout(this.timeout);
   },
   methods: {
-    ...mapMutations({
+    ...mapActions({
       addTask: ADD_TASK,
     }),
     init() {

@@ -1,15 +1,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import mutations from './mutations';
+import actions from './actions';
 import plugins from './plugins';
-import { TASKS_STORAGE_KEY, SETTINGS_STORAGE_KEY } from './constants';
+import { SETTINGS_STORAGE_KEY } from './constants';
 
 Vue.use(Vuex);
 
-// FIXME: Change to use indexeddb or sqlite
 export default new Vuex.Store({
   state: {
-    tasks: JSON.parse(window.localStorage.getItem(TASKS_STORAGE_KEY) || '[]'),
+    tasks: {
+      today: [],
+      old: [],
+    },
     settings: JSON.parse(window.localStorage.getItem(SETTINGS_STORAGE_KEY) || JSON.stringify({
       interval: 25,
       rest: 5,
@@ -23,5 +26,5 @@ export default new Vuex.Store({
   },
   plugins,
   mutations,
-  actions: { },
+  actions,
 });
