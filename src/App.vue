@@ -4,7 +4,6 @@
       <router-link to="/" tag="button"><Icon icon="alarm" /></router-link>
       <router-link to="/history" tag="button"><Icon icon="history" /></router-link>
       <router-link to="/settings" tag="button"><Icon icon="settings" /></router-link>
-      <router-link to="/about" tag="button"><Icon icon="info" /></router-link>
     </div>
 
     <div id="content">
@@ -39,6 +38,7 @@ button {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   max-height: 730px;
+  max-width: 435px;
   overflow: hidden;
 }
 
@@ -63,7 +63,7 @@ button {
     border: none;
     padding: 4px;
     -webkit-app-region: no-drag !important;
-    width: 110px;
+    width: 145px;
     height: 40px;
     background-color: rgb(30, 30, 30);
     display: inline-block;

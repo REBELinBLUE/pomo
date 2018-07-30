@@ -1,20 +1,20 @@
 <template>
   <vs-list>
-    <json-excel v-if="hasTasks" id="export" :data="tasks" :fields="fields" :name="filename" type="csv">
-      <vs-button vs-color="success"
-                 vs-type="filled"
-                 vs-icon="cloud_download"
-                 vs-size="medium"
-                 accesskey="d">Export (.csv)</vs-button>
-    </json-excel>
-
-    <vs-list-header :vs-title="title" vs-color="success" vs-icon="alarm" />
+    <vs-list-header :vs-title="title" vs-color="success" vs-icon="assignment" />
 
     <template v-if="hasTasks">
       <!-- FIXME: Show date in the history view -->
       <Task v-for="(task, index) in tasks" :item="task" :index="index" :key="index" />
     </template>
     <vs-list-item v-else :vs-title="emptyMessage" />
+
+    <json-excel v-if="hasTasks" id="export" :data="tasks" :fields="fields" :name="filename" type="csv">
+      <vs-button vs-color="success"
+                 vs-type="filled"
+                 vs-icon="archive"
+                 vs-size="medium"
+                 accesskey="d">Export as a CSV file</vs-button>
+    </json-excel>
   </vs-list>
 </template>
 
@@ -74,10 +74,7 @@ export default {
 
 <style lang="scss">
 #export {
-  float:right;
-  /*position: relative;*/
-  /*right: 20px;*/
-  /*margin-top: 12px;*/
-  z-index: 1000;
+  margin-top: 10px;
+  float: right;
 }
 </style>

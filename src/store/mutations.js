@@ -1,11 +1,11 @@
-import { ADD_TASK, SETTINGS_UPDATE, LOAD_TODAYS_TASKS, LOAD_OLD_TASKS } from './constants';
+import { ADD_TASK, SETTINGS_UPDATE, LOAD_CURRENT_TASKS, LOAD_OLD_TASKS } from './constants';
 
 export default {
   [ADD_TASK](state, task) {
     state.tasks.today.push(task);
   },
 
-  [LOAD_TODAYS_TASKS](state, tasks) {
+  [LOAD_CURRENT_TASKS](state, tasks) {
     state.tasks.today = tasks;
   },
 

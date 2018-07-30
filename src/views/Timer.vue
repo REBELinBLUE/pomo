@@ -24,9 +24,10 @@
 </template>
 
 <script>
+// FIXME: Should have a prop on this which is the current date which causes the reload when it changes
 import { mapActions } from 'vuex';
 import { ipcRenderer } from 'electron'; // eslint-disable-line
-import { LOAD_TODAYS_TASKS } from '@/store/constants';
+import { LOAD_CURRENT_TASKS } from '@/store/constants';
 import Timer from '@/components/Timer/Timer.vue';
 import TaskList from '@/components/TaskList/TaskList.vue';
 
@@ -70,7 +71,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      loadTasks: LOAD_TODAYS_TASKS,
+      loadTasks: LOAD_CURRENT_TASKS,
     }),
     started(payload) { // FIXME: Figure out some way to not include these when running outside of electron
       ipcRenderer.send('timer-started', payload);
