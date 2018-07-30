@@ -70,11 +70,21 @@ export default {
 <style scoped lang="scss">
 .vs-list-item {
   min-height: 72px;
+
+  /deep/ .list-title,
+  /deep/ .list-subtitle {
+    max-width: 285px;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+  }
 }
+
 .vs-divider {
   margin: 0px;
 }
 span {
   padding-right: 20px;
 }
+
 </style>

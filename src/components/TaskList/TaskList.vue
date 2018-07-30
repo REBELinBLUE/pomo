@@ -8,7 +8,7 @@
                  accesskey="d">Export (.csv)</vs-button>
     </json-excel>
 
-    <vs-list-header vs-icon="alarm" vs-title="Activity" vs-color="success" />
+    <vs-list-header :vs-title="title" vs-color="success" vs-icon="alarm" />
 
     <template v-if="hasTasks">
       <!-- FIXME: Show date in the history view -->
@@ -30,6 +30,10 @@ export default {
     JsonExcel,
   },
   props: {
+    title: {
+      type: String,
+      default: 'Activity',
+    },
     emptyMessage: {
       type: String,
       default: 'There are no tasks',
@@ -70,9 +74,10 @@ export default {
 
 <style lang="scss">
 #export {
-  position: absolute;
-  right: 20px;
-  margin-top: 12px;
+  float:right;
+  /*position: relative;*/
+  /*right: 20px;*/
+  /*margin-top: 12px;*/
   z-index: 1000;
 }
 </style>

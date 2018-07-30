@@ -1,5 +1,5 @@
 <template>
-  <vs-alert :vs-color="color" vs-active="true">
+  <vs-alert :vs-color="color" vs-active="true" vs-margin="0">
     <Interruption v-if="interrupted" v-model="interruptionReason" :on-save="done" />
 
     <TaskName v-model="currentTask" />
@@ -39,7 +39,6 @@ const MILLISECONDS_SECOND = 1000;
 const MILLISECONDS_MINUTE = 60 * MILLISECONDS_SECOND;
 
 // FIXME: Move counter details to state so it continues to work when switching screen
-// FIXME: Timer isn't quite in sync
 export default {
   name: 'Timer',
   components: {

@@ -19,7 +19,7 @@
            v-on:timerreset="init"
     />
 
-    <TaskList :tasks="tasks" empty-message="You have not started any tasks today." />
+    <TaskList :tasks="tasks" title="Today's Activity" empty-message="You have not started any tasks today." />
   </div>
 </template>
 
@@ -106,3 +106,9 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+.vs-list {
+  margin-top: 10px;
+}
+</style>

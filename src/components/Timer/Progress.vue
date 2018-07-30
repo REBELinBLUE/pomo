@@ -46,7 +46,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 /* fixme: this should be scoped */
 .radial-progress-container {
   margin: 20px;

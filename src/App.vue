@@ -38,6 +38,8 @@ button {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  max-height: 730px;
+  overflow: hidden;
 }
 
 #nav {
@@ -78,12 +80,11 @@ button {
 }
 
 #content {
-  margin: {
-    top: 50px;
-    right: 10px;
-    bottom: 10px;
-    left: 10px;
-  }
+  margin-top: 40px;
+  padding: 10px;
+  max-height: 690px;
+  min-height: 690px;
+  overflow-y: scroll;
 }
 
 :not(input):not(textarea),

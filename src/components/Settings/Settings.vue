@@ -1,5 +1,5 @@
 <template>
-  <vs-alert vs-active="true" vs-color="dark">
+  <vs-alert vs-margin="0" vs-active="true" vs-color="dark">
     <Dropdown v-model="interval" :options="workOptions" label="Work Interval" />
     <Dropdown v-model="rest" :options="restOptions" label="Short Break" />
     <Dropdown v-model="long_rest" :options="longRestOptions" label="Long Break" />
@@ -120,7 +120,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 h3 {
   font-size: 100%;
   font-weight: bolder;
@@ -128,5 +128,13 @@ h3 {
   margin: {
     bottom: 10px;
   }
+}
+
+.vs-select-options, .con-select, .con-select .input-select {
+  width: 150px !important;
+}
+
+.vs-select-options ul li {
+  display: block !important;
 }
 </style>

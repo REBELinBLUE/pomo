@@ -1,5 +1,6 @@
 <template>
-  <TaskList :tasks="tasks" empty-message="You have not started any tasks yet." />
+  <!-- FIXME: Improve message -->
+  <TaskList :tasks="tasks" title="Past Activity" empty-message="You have not started any tasks yet." />
 </template>
 
 <script>
