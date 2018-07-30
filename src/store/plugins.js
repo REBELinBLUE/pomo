@@ -1,8 +1,7 @@
-import { TASKS_STORAGE_KEY, SETTINGS_STORAGE_KEY } from './constants';
+import { SETTINGS_STORAGE_KEY } from './constants';
 
 const localStoragePlugin = store =>
-  store.subscribe((mutation, { tasks, settings }) => {
-    window.localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks));
+  store.subscribe((mutation, { settings }) => {
     window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
   });
 

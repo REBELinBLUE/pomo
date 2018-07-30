@@ -15,7 +15,7 @@ export default {
     db.tasks
       .put(task)
       .then(() => { commit(ADD_TASK, task); })
-      .catch(console.error.bind(this));
+      .catch(console.error);
   },
 
   [LOAD_TODAYS_TASKS]({ commit }) {
@@ -26,10 +26,9 @@ export default {
       .where('date')
       .between(new Date(todayStart), new Date(todayFinish))
       .reverse()
-      // .sortBy('date')
       .toArray()
       .then((tasks) => { commit(LOAD_TODAYS_TASKS, tasks); })
-      .catch(console.error.bind(this));
+      .catch(console.error);
   },
 
   [LOAD_OLD_TASKS]({ commit }) {
@@ -37,9 +36,8 @@ export default {
     db.tasks
       .where('date')
       .below(new Date(todayStart))
-      // .sortBy('date')
       .toArray()
       .then((tasks) => { commit(LOAD_OLD_TASKS, tasks); })
-      .catch(console.error.bind(this));
+      .catch(console.error);
   },
 };
