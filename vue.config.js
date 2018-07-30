@@ -9,9 +9,7 @@ module.exports = {
 
   pluginOptions: {
     electronBuilder: {
-      chainWebpackRendererProcess: (config) => {
-        return config;
-      },
+      chainWebpackRendererProcess: config => config,
       chainWebpackMainProcess: (config) => {
         config.externals({
           // 'node-hid': 'commonjs node-hid',
