@@ -1,14 +1,13 @@
 import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'; // eslint-disable-line
 import { ipcMain, app, protocol, Tray, Notification, nativeImage } from 'electron'; // eslint-disable-line
 import * as path from 'path';
-import createMainWindow, { positionWindowBelowTray } from './electron/window';
+import createMainWindow, { positionWindowBelowTray } from './electron/mainWindow';
 import isDevelopment from './electron/isDevelopment';
 import light from './electron/light';
 import zeroPad from './filters/zeroPad';
 import minutesRemaining from './filters/minutesRemaining';
 import secondsRemaining from './filters/secondsRemaining';
 import contextMenu from './electron/contextMenu';
-
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
@@ -143,6 +142,7 @@ ipcMain.on('timer-stopped', (event, payload) => {
   const myNotification = new Notification({
     title,
     body,
+    silent: true,
   });
 
   myNotification.show();
