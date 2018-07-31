@@ -1,0 +1,12 @@
+{
+  "appId": "com.rebelinblue.pomo",
+  "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+  "mac": {
+    "category": "public.app-category.productivity",
+    "icon": "resources/icon.icns",
+    "target": [
+      "dmg",
+      "zip"
+    ]
+  }
+}

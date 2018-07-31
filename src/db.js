@@ -1,5 +1,4 @@
 import Dexie from 'dexie';
-// import createFake from '../faker';
 
 const db = new Dexie('pomodoro');
 
@@ -31,8 +30,6 @@ tasks.forEach((item) => {
   task.save();
 });
 window.localStorage.removeItem('pomodoro:tasks');
-
-// createFake(db);
 
 export default db;
 

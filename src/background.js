@@ -9,6 +9,8 @@ import minutesRemaining from './filters/minutesRemaining';
 import secondsRemaining from './filters/secondsRemaining';
 import contextMenu from './electron/contextMenu';
 
+// FIXME: https://github.com/electron/electron/blob/v0.36.10/docs/api/app.md#appmakesingleinstancecallback
+
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow;
 let tray;
