@@ -21,6 +21,17 @@ Task.prototype.save = function () {
   return db.tasks.put(this);
 };
 
+const tasks = JSON.parse(window.localStorage.getItem('pomodoro:tasks') || '[]');
+tasks.forEach((item) => {
+  const task = new Task({
+    ...item,
+    date: new Date(item.date),
+  });
+
+  task.save();
+});
+window.localStorage.removeItem('pomodoro:tasks');
+
 // createFake(db);
 
 export default db;
