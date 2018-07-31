@@ -2,6 +2,10 @@
   <sweet-modal ref="interrupt" title="Oh no!" hide-close-button blocking>
     <textarea v-model="innerValue" data-gramm_editor="false" placeholder="Why were you interrupted?" />
 
+    <vs-alert :vs-active="showError" vs-color="danger" vs-icon="new_releases">
+      Please enter a reason for the interruption
+    </vs-alert>
+
     <vs-row slot="button">
       <vs-col vs-type="flex" vs-justify="flex-end" vs-align="center" vs-w="12">
         <vs-button vs-color="danger"
@@ -30,11 +34,13 @@ export default {
     },
     value: {
       type: String,
-      required: true,
+      required: false,
+      default: '',
     },
   },
   data() {
     return {
+      showError: false,
       innerValue: this.value,
     };
   },
@@ -43,6 +49,7 @@ export default {
       this.innerValue = val;
     },
     innerValue(val) {
+      this.showError = false;
       this.$emit('input', val);
     },
   },
@@ -52,7 +59,7 @@ export default {
   methods: {
     done() {
       if (this.innerValue === null || this.innerValue.trim().length === 0) {
-        this.$refs.interrupt.bounce();
+        this.showError = true;
         return;
       }
 

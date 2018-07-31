@@ -4,6 +4,8 @@
 
 <script>
 // FIXME: Should have a prop on this which is the current date which causes the reload when it changes
+import { mapActions } from 'vuex';
+import { LOAD_OLD_TASKS } from '@/store/constants';
 import TaskList from '@/components/TaskList/TaskList.vue';
 
 export default {
@@ -34,6 +36,14 @@ export default {
     //       return 0;
     //     });
     // },
+  },
+  beforeMount() {
+    this.loadTasks();
+  },
+  methods: {
+    ...mapActions({
+      loadTasks: LOAD_OLD_TASKS,
+    }),
   },
 };
 </script>
