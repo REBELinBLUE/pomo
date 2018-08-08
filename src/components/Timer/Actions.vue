@@ -7,7 +7,7 @@
                  vs-icon="play_arrow"
                  vs-size="large"
                  accesskey="s"
-                 v-on:click="onStart">Start countdown</vs-button>
+                 @click="onStart">Start countdown</vs-button>
 
       <vs-button v-if="running"
                  vs-color="danger"
@@ -15,7 +15,7 @@
                  vs-icon="warning"
                  vs-size="large"
                  accesskey="i"
-                 v-on:click="onInterrupt">Work interruption</vs-button>
+                 @click="onInterrupt">Work interruption</vs-button>
 
       <vs-button v-if="resting"
                  vs-color="success"
@@ -23,12 +23,14 @@
                  vs-icon="skip_next"
                  vs-size="large"
                  accesskey="k"
-                 v-on:click="onSkip">Skip rest break</vs-button>
+                 @click="onSkip">Skip rest break</vs-button>
     </vs-col>
   </vs-row>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'Actions',
   props: {
@@ -44,21 +46,13 @@ export default {
       type: Function,
       required: true,
     },
-    stopped: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
-    running: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-    resting: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
+  },
+  computed: {
+    ...mapState({
+      stopped: state => !state.timer.is_counting,
+      running: state => state.timer.is_working && state.timer.is_counting,
+      resting: state => !state.timer.is_working,
+    }),
   },
 };
 </script>

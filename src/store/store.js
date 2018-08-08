@@ -7,9 +7,21 @@ import { SETTINGS_STORAGE_KEY } from './constants';
 
 Vue.use(Vuex);
 
+// FIXME: Move to modules
 export default new Vuex.Store({
   state: {
+    timer: {
+      is_counting: false,
+      is_working: true,
+      is_long_break: false,
+      length: 0,
+      remaining: 0,
+      counter: 0,
+    },
     tasks: {
+      current: null,
+      completed: -1,
+      failed: 0,
       today: [],
       old: [],
     },

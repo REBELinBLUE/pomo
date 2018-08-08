@@ -2,11 +2,13 @@ import { ADD_TASK, LOAD_CURRENT_TASKS, LOAD_OLD_TASKS } from './constants';
 import db, { Task } from '../db';
 
 export default {
-  [ADD_TASK]({ commit }, payload) {
+  [ADD_TASK]({ commit, state }, payload) {
     const task = new Task({
       date: new Date(Date.now()),
       interrupted: false,
       notes: null,
+      time: (state.timer.length - state.timer.remaining) / 1000, // FIXME: Change this
+      description: state.tasks.current || 'Unnamed',
       ...payload,
     });
 

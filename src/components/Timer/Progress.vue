@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import RadialProgressBar from 'vue-radial-progress';
 
 export default {
@@ -23,24 +24,25 @@ export default {
   components: {
     RadialProgressBar,
   },
-  props: {
-    remainingColor: {
-      type: String,
-      required: true,
+  computed: {
+    ...mapState({
+      completed: state => state.timer.remaining,
+      total: state => state.timer.length,
+      isWorking: state => state.timer.is_working,
+    }),
+    remainingColor() {
+      if (this.isWorking) {
+        return 'rgb(255, 71, 87)';
+      }
+
+      return 'rgb(109, 198, 81)';
     },
-    completedColor: {
-      type: String,
-      required: true,
-    },
-    total: {
-      type: Number,
-      required: false,
-      default: 100,
-    },
-    completed: {
-      type: Number,
-      required: false,
-      default: 0,
+    completedColor() {
+      if (this.isWorking) {
+        return 'rgb(251, 223, 223)';
+      }
+
+      return 'rgb(227, 244, 221)';
     },
   },
 };

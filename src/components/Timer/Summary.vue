@@ -10,22 +10,15 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'Summary',
-  props: {
-    failed: {
-      type: Number,
-      default: 0,
-    },
-    completed: {
-      type: Number,
-      default: 0,
-    },
-    target: {
-      type: Number,
-      default: 10,
-    },
-  },
+  computed: mapState({
+    completed: state => state.tasks.completed,
+    failed: state => state.tasks.failed,
+    target: state => state.settings.target,
+  }),
 };
 </script>
 

@@ -13,7 +13,7 @@
                    vs-icon="save"
                    vs-size="large"
                    accesskey="d"
-                   v-on:click="done">Done</vs-button>
+                   @click="done">Done</vs-button>
       </vs-col>
     </vs-row>
   </sweet-modal>

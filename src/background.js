@@ -119,7 +119,7 @@ ipcMain.on('timer-interrupted', () => {
   }, 5000);
 });
 
-ipcMain.on('timer-init', (event, payload) => {
+ipcMain.on('timer-reset', (event, payload) => {
   const { msTotal } = payload;
   setTitleCounter(msTotal);
 });

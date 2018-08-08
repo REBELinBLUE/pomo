@@ -7,18 +7,36 @@
     </div>
 
     <div id="content">
+      <Timer @timerstart="started" @timerstop="stopped" @timerprogress="progress" @timerreset="reset" />
       <router-view />
     </div>
   </div>
 </template>
 
 <script>
+import { ipcRenderer } from 'electron'; // eslint-disable-line
 import Icon from '@/components/Icon.vue';
+import Timer from '@/components/Timer.vue';
 
 export default {
   name: 'App',
   components: {
     Icon,
+    Timer,
+  },
+  methods: {
+    started(payload) { // FIXME: Figure out some way to not include these when running outside of electron
+      ipcRenderer.send('timer-started', payload);
+    },
+    progress(payload) {
+      ipcRenderer.send('timer-progress', payload);
+    },
+    stopped(payload) {
+      ipcRenderer.send('timer-stopped', payload);
+    },
+    reset(payload) {
+      ipcRenderer.send('timer-reset', payload);
+    },
   },
 };
 </script>

@@ -1,8 +1,11 @@
 <template>
-  <vs-input v-model="innerValue" class="task-name" vs-icon="alarm" placeholder="Enter task name..." />
+  <vs-input :value="task" class="task-name" vs-icon="alarm" placeholder="Enter task name..." @input="updateTask" />
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex';
+import { SET_CURRENT_TASK } from '@/store/constants';
+
 export default {
   name: 'TaskName',
   props: {
@@ -12,19 +15,12 @@ export default {
       default: '',
     },
   },
-  data() {
-    return {
-      innerValue: this.value,
-    };
-  },
-  watch: {
-    value(val) {
-      this.innerValue = val;
-    },
-    innerValue(val) {
-      this.$emit('input', val);
-    },
-  },
+  computed: mapState({
+    task: state => state.tasks.current,
+  }),
+  methods: mapMutations({
+    updateTask: SET_CURRENT_TASK,
+  }),
 };
 </script>
 
