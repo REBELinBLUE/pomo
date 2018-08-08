@@ -10,45 +10,41 @@
 </template>
 
 <script>
-  import dateFormat from 'dateformat';
-  import JsonExcel from 'vue-json-excel/JsonExcel.vue';
-  import Date from '@/components/TaskList/Date.vue';
+import Date from '@/components/TaskList/Date.vue';
 
-  export default {
-    name: 'DateList',
-    components: {
-      Date,
-      JsonExcel,
+export default {
+  name: 'DateList',
+  components: {
+    Date,
+  },
+  props: {
+    emptyMessage: {
+      type: String,
+      default: 'There are no tasks',
     },
-    props: {
-      emptyMessage: {
-        type: String,
-        default: 'There are no tasks',
-      },
-      tasks: {
-        type: Array,
-        default: [],
-      },
-      dates: {
-        type: Array,
-        default: [],
-      },
+    tasks: {
+      type: Array,
+      default: () => [],
     },
-    computed: {
-      hasTasks() {
-        return this.dates.length > 0;
-      },
+    dates: {
+      type: Array,
+      default: () => [],
     },
-    methods: {
-      tasksForDate(date) {
-        return this.tasks.filter((task) => {
-          const timestamp = task.date.setHours(0, 0, 0, 0);
-          const foo = date.setHours(0, 0, 0, 0);
+  },
+  computed: {
+    hasTasks() {
+      return this.dates.length > 0;
+    },
+  },
+  methods: {
+    tasksForDate(date) {
+      return this.tasks.filter((task) => {
+        const timestamp = task.date.setHours(0, 0, 0, 0);
+        const foo = date.setHours(0, 0, 0, 0);
 
-          return timestamp === foo;
-        })
-        return [];
-      }
-    }
-  };
+        return timestamp === foo;
+      });
+    },
+  },
+};
 </script>
