@@ -3,7 +3,6 @@
     <vs-list-header :vs-title="title" vs-color="success" vs-icon="assignment" />
 
     <template v-if="hasTasks">
-      <!-- FIXME: Show date in the history view -->
       <Task v-for="(task, index) in tasks" :item="task" :index="index" :key="index" />
     </template>
     <vs-list-item v-else :vs-title="emptyMessage" />

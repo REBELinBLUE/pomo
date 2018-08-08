@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Timer from './views/Timer.vue';
 import Settings from './views/Settings.vue';
 import History from './views/History.vue';
+import HistoryForDate from './views/HistoryForDate.vue';
 
 Vue.use(Router);
 
@@ -17,6 +18,11 @@ export default new Router({
       path: '/history',
       name: 'history',
       component: History,
+    },
+    {
+      path: '/history/:date',
+      name: 'history-for-date',
+      component: HistoryForDate,
     },
     {
       path: '/settings',

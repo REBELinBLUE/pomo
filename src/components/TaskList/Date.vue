@@ -1,14 +1,16 @@
 <template>
   <div>
-    <vs-list-item :vs-title="readable" v-on:click.native="visible = !visible">
-      <vs-chip vs-color="success" vs-icon="check_circle">{{ completed }}</vs-chip>
-      <vs-chip vs-color="danger" vs-icon="error">{{ interrupted }}</vs-chip>
-    </vs-list-item>
+    <router-link :to="link">
+      <vs-list-item :vs-title="readable">
+        <vs-chip vs-color="success" vs-icon="check_circle">{{ completed }}</vs-chip>
+        <vs-chip vs-color="danger" vs-icon="error">{{ interrupted }}</vs-chip>
+      </vs-list-item>
+    </router-link>
 
-    <div v-if="visible">
-      <vs-divider />
-      <Task v-for="(task, index) in tasks" :item="task" :index="index" :key="index" />
-    </div>
+    <!--<div v-if="visible">-->
+      <!--<vs-divider />-->
+      <!--<Task v-for="(task, index) in tasks" :item="task" :index="index" :key="index" />-->
+    <!--</div>-->
 
     <vs-divider />
   </div>
@@ -33,10 +35,13 @@ export default {
       default: () => [],
     },
   },
-  data: () => ({
-    visible: false,
-  }),
+  // data: () => ({
+  //   visible: false,
+  // }),
   computed: {
+    link() {
+      return `/history/${dateFormat(this.date, 'yyyy-mm-dd')}`
+    },
     readable() {
       return dateFormat(this.date, 'dS mmmm yyyy');
     },

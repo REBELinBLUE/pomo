@@ -5,6 +5,7 @@
     <template v-if="hasTasks">
       <Date v-for="(date, index) in dates" :date="date" :tasks="tasksForDate(date)" :index="index" :key="index" />
     </template>
+
     <vs-list-item v-else :vs-title="emptyMessage" />
   </vs-list>
 </template>
