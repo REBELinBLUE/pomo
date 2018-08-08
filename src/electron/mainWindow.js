@@ -66,7 +66,7 @@ export const positionWindowBelowTray = (window, tray) => {
   // FIXME: This is so that the tray position is correct on portrait screen.
   //        This has been fixed in electron https://github.com/electron/electron/pull/13162
   //        But for some reason still isn't working
-  const workArea = screen.getDisplayNearestPoint(screen.getCursorScreenPoint()).workArea
+  const { workArea } = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
 
   // Center window horizontally below the tray icon
   // const x = Math.round((trayBounds.x + (trayBounds.width / 2)) - (windowBounds.width / 2));
