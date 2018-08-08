@@ -1,7 +1,8 @@
 <template>
   <div>
     <vs-list-item :vs-title="readable" v-on:click.native="visible = !visible">
-      <vs-chip>{{ tasks.length }}</vs-chip>
+      <vs-chip vs-color="success" vs-icon="check_circle">{{ completed }}</vs-chip>
+      <vs-chip vs-color="danger" vs-icon="error">{{ interrupted }}</vs-chip>
     </vs-list-item>
     <Task v-if="visible" v-for="(task, index) in tasks" :item="task" :index="index" :key="index" />
     <vs-divider />
@@ -33,6 +34,18 @@
     computed: {
       readable() {
         return dateFormat(this.date, 'dS mmmm yyyy');
+      },
+      completed() {
+        return this.tasks.reduce((accumlator, task) => {
+          if (!task.interrupted) {
+            accumlator += 1;
+          }
+
+          return accumlator;
+        }, 0);
+      },
+      interrupted() {
+        return this.tasks.length - this.completed;
       },
     },
   };
