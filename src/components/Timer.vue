@@ -176,9 +176,14 @@ export default {
     },
     playSound() {
       if (this.shouldPlayAlarm) {
-        const audio = new Audio('alarm.wav');
+        const audio = new Audio('alarm.mp3');
         audio.volume = 1.0;
-        audio.play().catch(() => { /* Do not worry about this error */ });
+
+        audio.play().then(() => {
+          setTimeout(() => {
+            audio.pause();
+          }, 2000);
+        }).catch(() => { /* Do not worry about this error */ });
       }
     },
   },
