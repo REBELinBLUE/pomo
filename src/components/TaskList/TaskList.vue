@@ -40,7 +40,7 @@ export default {
     },
     tasks: {
       type: Array,
-      default: () => [],
+      default: [],
     },
   },
   data() {

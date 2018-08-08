@@ -31,6 +31,9 @@ export default {
     date() {
       return dateFormat(new Date(this.item.date), 'dd/mm/yyyy');
     },
+    time() {
+      return dateFormat(new Date(this.item.date), 'h:MMTT');
+    },
     icon() {
       if (this.isCompleted()) {
         return 'check_circle';
