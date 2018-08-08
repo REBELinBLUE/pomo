@@ -65,7 +65,7 @@ export default {
 
     state.timer.is_long_break = state.tasks.completed % state.settings.long_rest_after === 0;
 
-    state.tasks.today.push(task);
+    state.tasks.today.unshift(task);
   },
 
   [LOAD_CURRENT_TASKS](state, tasks) {

@@ -20,7 +20,21 @@ export default {
     TaskList,
   },
   computed: mapState({
-    tasks: state => state.tasks.today,
+    // FIXME: Not sure if this is needed as the tasks should already be in order!
+    tasks: state => state.tasks.today.sort((a, b) => {
+      const firstDate = a.date;
+      const secondDate = b.date;
+
+      if (firstDate < secondDate) {
+        return 1;
+      }
+
+      if (firstDate > secondDate) {
+        return -1;
+      }
+
+      return 0;
+    }),
   }),
   beforeMount() {
     this.loadTasks();
