@@ -4,9 +4,9 @@
   "mac": {
     "category": "public.app-category.productivity",
     "icon": "resources/icon.icns",
-    "target": [
-      "dmg",
-      "zip"
-    ]
+    "target": ["dmg"]
+  },
+  "dmg": {
+    "background": "resources/background.png"
   }
 }
