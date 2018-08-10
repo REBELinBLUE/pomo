@@ -1,4 +1,5 @@
 {
+  "productName": "Pomo",
   "appId": "com.rebelinblue.pomo",
   "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
   "mac": {
