@@ -120,9 +120,10 @@ button {
 
 #content {
   margin-top: 50px;
+  margin-bottom: 10px;
   padding: 10px;
-  max-height: 690px;
-  min-height: 690px;
+  max-height: 680px;
+  min-height: 680px;
   overflow-y: scroll;
   background-color: #ffffff;
 }
