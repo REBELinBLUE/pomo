@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <div class="header-arrow" />
+
     <div id="nav">
       <router-link to="/" tag="button"><Icon icon="alarm" /></router-link>
       <router-link to="/history" tag="button"><Icon icon="history" /></router-link>
@@ -43,7 +45,7 @@ export default {
 
 <style lang="scss">
 body {
-  background-color: #fff;
+  background-color: transparent;
 }
 
 button {
@@ -56,7 +58,7 @@ button {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   max-height: 730px;
-  max-width: 435px;
+  max-width: 437px;
   overflow: hidden;
 }
 
@@ -68,11 +70,15 @@ button {
   background-color: rgb(30, 30, 30);
   width: 100%;
   position: fixed;
-  top: 0px;
+  top: 10px;
   z-index: 2000;
   color: #fff;
   -webkit-user-select: none;
   cursor: pointer;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border: 1px solid rgb(30, 30, 30);
+  box-shadow: none;
 
   button {
     -webkit-appearance: none;
@@ -81,10 +87,14 @@ button {
     border: none;
     padding: 4px;
     -webkit-app-region: no-drag !important;
-    width: 145px;
+    width: 143px;
     height: 40px;
     background-color: rgb(30, 30, 30);
     display: inline-block;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    box-shadow: none;
+    border: 1px solid rgb(30, 30, 30);
     color: #fff;
     margin: 0;
     font-size: 92%;
@@ -97,12 +107,24 @@ button {
   }
 }
 
+.header-arrow {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  margin-left: -5px;
+  height: 15px;
+  width: 15px;
+  transform: rotate(45deg);
+  background-color: rgb(30, 30, 30);
+}
+
 #content {
-  margin-top: 40px;
+  margin-top: 50px;
   padding: 10px;
   max-height: 690px;
   min-height: 690px;
   overflow-y: scroll;
+  background-color: #ffffff;
 }
 
 :not(input):not(textarea),

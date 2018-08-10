@@ -6,12 +6,13 @@ import isDevelopment from './isDevelopment';
 
 export default function createMainWindow() {
   let appWindow = new BrowserWindow({
-    width: 435,
+    width: 437,
     height: 730,
     resizable: false,
     minimizable: false,
     maximizable: false,
     fullscreen: false,
+    transparent: true,
     show: false,
     // titleBarStyle: 'hidden',
     frame: false,
@@ -74,7 +75,7 @@ export const positionWindowBelowTray = (window, tray) => {
 
   // Position window 4 pixels vertically below the tray icon
   // const y = Math.round(trayBounds.y + trayBounds.height + 10);
-  const y = Math.round(workArea.y + 10);
+  const y = Math.round(workArea.y + 1);
 
   window.setPosition(x, y, false);
 };
