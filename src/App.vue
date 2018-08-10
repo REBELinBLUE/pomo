@@ -88,7 +88,7 @@ button {
     padding: 4px;
     -webkit-app-region: no-drag !important;
     width: 143px;
-    height: 40px;
+    height: 38px;
     background-color: rgb(30, 30, 30);
     display: inline-block;
     border-top-left-radius: 8px;
