@@ -1,5 +1,5 @@
 import { installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'; // eslint-disable-line
-import { ipcMain, app, protocol, Tray, Notification, nativeImage } from 'electron'; // eslint-disable-line
+import { ipcMain, app, protocol, Tray, Notification, nativeImage, globalShortcut } from 'electron'; // eslint-disable-line
 import * as path from 'path';
 import createMainWindow, { positionWindowBelowTray } from './electron/mainWindow';
 import isDevelopment from './electron/isDevelopment';
@@ -70,6 +70,10 @@ app.on('quit', () => {
   light.reset();
 });
 
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
+});
+
 // create main BrowserWindow when electron is ready
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
@@ -87,6 +91,11 @@ app.on('ready', async () => {
   tray.setTitle('00:00');
   tray.on('click', toggleWindow);
   tray.on('right-click', () => tray.popUpContextMenu(contextMenu));
+
+
+  globalShortcut.register('Alt+Cmd+Shift+P', () => {
+    mainWindow.webContents.send('toggle');
+  })
 });
 
 app.dock.hide();

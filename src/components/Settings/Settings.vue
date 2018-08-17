@@ -11,6 +11,10 @@
     <Toggle v-model="autostart" label="Auto-Start Timer" />
     <Toggle v-model="interval_alarm" label="Play Alarm Sound After Work Interval" />
     <Toggle v-model="break_alarm" label="Play Alarm Sound After Break" />
+
+    <vs-divider />
+
+    <Accelerator />
   </vs-alert>
 </template>
 
@@ -19,12 +23,14 @@ import { mapMutations } from 'vuex';
 import { SETTINGS_UPDATE } from '@/store/constants';
 import Dropdown from '@/components/Settings/Dropdown.vue';
 import Toggle from '@/components/Settings/Toggle.vue';
+import Accelerator from '@/components/Settings/Accelerator.vue';
 
 export default {
   name: 'SettingsPanel',
   components: {
     Dropdown,
     Toggle,
+    Accelerator,
   },
   props: {
     settings: {

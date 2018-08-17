@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron';
 import { mapMutations, mapActions, mapState } from 'vuex';
 import { TIMER_TICK, TIMER_STOP, TIMER_START, TIMER_RESET, ADD_TASK } from '@/store/constants';
 
@@ -20,6 +21,15 @@ export default {
   data: () => ({
     endTime: 0,
   }),
+  mounted() {
+    ipcRenderer.on('toggle', () => {
+      if (!this.isCounting) {
+        this.startTimer();
+      }
+    })
+
+    // FIXME: Skip break
+  },
   computed: {
     ...mapState({
       isCounting: state => state.timer.is_counting,
