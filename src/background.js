@@ -39,7 +39,7 @@ const toggleWindow = () => {
 };
 
 const setTitleCounter = (msTotal) => {
-  const seconds = (msTotal / 1000);
+  const seconds = Math.round(msTotal / 1000);
 
   tray.setTitle(`${zeroPad(minutesRemaining(seconds))}:${zeroPad(secondsRemaining(seconds))}`);
 };
