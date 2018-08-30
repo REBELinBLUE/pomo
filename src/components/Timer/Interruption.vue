@@ -1,5 +1,5 @@
 <template>
-  <sweet-modal ref="interrupt" title="Oh no!" hide-close-button blocking>
+  <sweet-modal :enable-mobile-fullscreen="false" ref="interrupt" title="Oh no!" hide-close-button blocking>
     <textarea v-model="innerValue" data-gramm_editor="false" placeholder="Why were you interrupted?" />
 
     <vs-alert :vs-active="showError" vs-color="danger" vs-icon="new_releases">
@@ -80,5 +80,11 @@ textarea {
   width: 100%;
   height: 175px;
   padding: 10px;
+}
+
+.sweet-modal-overlay {
+  margin-top: 10px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 </style>
