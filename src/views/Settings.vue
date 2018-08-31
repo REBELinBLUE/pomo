@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import SettingsPanel from '@/components/Settings/Settings.vue';
 
 export default {
@@ -10,10 +11,8 @@ export default {
   components: {
     SettingsPanel,
   },
-  data() {
-    return {
-      settings: this.$store.state.settings,
-    };
-  },
+  computed: mapState({
+    settings: state => state.settings,
+  }),
 };
 </script>

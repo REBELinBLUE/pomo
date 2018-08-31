@@ -7,6 +7,18 @@ import { SETTINGS_STORAGE_KEY } from './constants';
 
 Vue.use(Vuex);
 
+const defaultSettings = {
+  interval: 25,
+  rest: 5,
+  long_rest: 15,
+  long_rest_after: 4,
+  target: 10,
+  autostart: false,
+  interval_alarm: true,
+  break_alarm: true,
+  device: null,
+};
+
 // FIXME: Move to modules
 export default new Vuex.Store({
   state: {
@@ -25,16 +37,11 @@ export default new Vuex.Store({
       today: [],
       old: [],
     },
-    settings: JSON.parse(window.localStorage.getItem(SETTINGS_STORAGE_KEY) || JSON.stringify({
-      interval: 25,
-      rest: 5,
-      long_rest: 15,
-      long_rest_after: 4,
-      target: 10,
-      autostart: false,
-      interval_alarm: true,
-      break_alarm: true,
-    })),
+    settings: Object.assign(defaultSettings, JSON.parse(window.localStorage.getItem(SETTINGS_STORAGE_KEY) || '{}')),
+    light: {
+      devices: {},
+      connected: false,
+    },
   },
   plugins,
   mutations,

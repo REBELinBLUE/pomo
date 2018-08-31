@@ -1,5 +1,5 @@
 <template>
-  <sweet-modal :enable-mobile-fullscreen="false" ref="interrupt" title="Oh no!" hide-close-button blocking>
+  <sweet-modal ref="interrupt" :enable-mobile-fullscreen="false" title="Oh no!" hide-close-button blocking>
     <textarea v-model="innerValue" data-gramm_editor="false" placeholder="Why were you interrupted?" />
 
     <vs-alert :vs-active="showError" vs-color="danger" vs-icon="new_releases">

@@ -16,6 +16,7 @@ const Task = db.tasks.defineClass({
   time: Number,
 });
 
+// eslint-disable-next-line
 Task.prototype.save = function () {
   return db.tasks.put(this);
 };

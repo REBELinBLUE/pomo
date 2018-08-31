@@ -1,5 +1,6 @@
 <template>
   <vs-alert :vs-color="color" vs-active="true" vs-margin="0">
+    <!-- fixme: replace with events -->
     <Interruption v-if="interrupted" v-model="interruptionReason" :on-save="done" />
 
     <TaskName v-model="currentTask" />

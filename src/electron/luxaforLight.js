@@ -1,6 +1,8 @@
 import Luxafor from 'node-luxafor';
 
-let light;
+// FIXME: Refactor to be compatible with PomoLight
+
+let luxaforLight;
 
 // FIXME: Add some more colours
 const colours = {
@@ -12,27 +14,27 @@ const colours = {
 
 const connect = () => {
   try {
-    light = new Luxafor();
+    luxaforLight = new Luxafor();
   } catch (e) {
     console.log(e.message);
-    light = undefined;
+    luxaforLight = undefined;
   }
 };
 
 const reconnect = () => {
-  if (!light) {
+  if (!luxaforLight) {
     connect();
   }
 };
 
 const setRGB = ({ r, g, b }) => {
   reconnect();
-  if (light) {
+  if (luxaforLight) {
     try {
-      light.color(r, g, b).exec();
+      luxaforLight.color(r, g, b).exec();
     } catch (e) {
       console.log(e.message);
-      light = undefined;
+      luxaforLight = undefined;
     }
   }
 };
@@ -45,24 +47,24 @@ const setColour = (colour) => {
 
 const setPattern = (pattern) => {
   reconnect();
-  if (light) {
+  if (luxaforLight) {
     try {
-      light.pattern(pattern).exec();
+      luxaforLight.pattern(pattern).exec();
     } catch (e) {
       console.log(e.message);
-      light = undefined;
+      luxaforLight = undefined;
     }
   }
 };
 
 const reset = () => {
   reconnect();
-  if (light) {
+  if (luxaforLight) {
     try {
-      light.reset().exec();
+      luxaforLight.reset().exec();
     } catch (e) {
       console.log(e.message);
-      light = undefined;
+      luxaforLight = undefined;
     }
   }
 };

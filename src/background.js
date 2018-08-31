@@ -3,7 +3,7 @@ import { ipcMain, app, protocol, Tray, Notification, nativeImage } from 'electro
 import * as path from 'path';
 import createMainWindow, { positionWindowBelowTray } from './electron/mainWindow';
 import isDevelopment from './electron/isDevelopment';
-import light from './electron/light';
+import PomoLight from './electron/PomoLight';
 import zeroPad from './filters/zeroPad';
 import minutesRemaining from './filters/minutesRemaining';
 import secondsRemaining from './filters/secondsRemaining';
@@ -15,6 +15,9 @@ import contextMenu from './electron/contextMenu';
 let mainWindow;
 let tray;
 let timeout;
+let light;
+let devices = [];
+let paired;
 const filled = nativeImage.createFromPath(path.join(__static, 'filled.png'));
 const inverted = nativeImage.createFromPath(path.join(__static, 'invert.png'));
 // const emptied = nativeImage.createFromPath(path.join(__static, 'empty.png'));
@@ -44,6 +47,14 @@ const setTitleCounter = (msTotal) => {
   tray.setTitle(`${zeroPad(minutesRemaining(seconds))}:${zeroPad(secondsRemaining(seconds))}`);
 };
 
+const connectPairedDevice = () => {
+  const device = devices[paired]; // FIXME: Should use something other than the name, maybe the ID?
+
+  if (device) {
+    light.connect(device);
+  }
+};
+
 // Standard scheme must be registered before the app is ready
 protocol.registerStandardSchemes(['app'], { secure: true });
 
@@ -67,7 +78,7 @@ protocol.registerStandardSchemes(['app'], { secure: true });
 // });
 
 app.on('quit', () => {
-  light.reset();
+  light.disconnect();
 });
 
 // create main BrowserWindow when electron is ready
@@ -77,10 +88,26 @@ app.on('ready', async () => {
     await installVueDevtools();
   }
 
-  light.connect();
-  light.setColour('orange');
-
   mainWindow = createMainWindow();
+
+  light = new PomoLight();
+
+  light.on('foundNewDevice', (newDevice, allDevices) => {
+    mainWindow.webContents.send('device-discovered', allDevices);
+
+    devices = allDevices;
+
+    connectPairedDevice();
+  });
+
+  light.on('connected', async () => {
+    mainWindow.webContents.send('device-connected');
+    light.setColour('orange');
+  });
+
+  light.on('disconnected', () => {
+    mainWindow.webContents.send('device-disconnected');
+  });
 
   tray = new Tray(filled); // FIXME: Figure out how to move these to the resources dir
   tray.setPressedImage(inverted);
@@ -90,6 +117,17 @@ app.on('ready', async () => {
 });
 
 app.dock.hide();
+
+ipcMain.on('device-paired', (event, deviceName) => {
+  paired = deviceName;
+
+  connectPairedDevice();
+});
+
+ipcMain.on('device-unpaired', () => {
+  paired = null;
+  light.disconnect();
+});
 
 ipcMain.on('timer-started', (event, payload) => {
   clearTimeout(timeout);
@@ -110,13 +148,27 @@ ipcMain.on('timer-skipped', () => {
 });
 
 ipcMain.on('timer-interrupted', () => {
-  // Police lights
-  light.setPattern('police');
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+  const policeLight = async () => {
+    /* eslint-disable no-await-in-loop */
+    for (let i = 0; i < 10; i += 1) {
+      light.setColour('red');
+      await delay(100);
+      light.setColour('blue');
+      await delay(100);
+    }
+    /* eslint-enable no-await-in-loop */
+
+    light.setColour('orange');
+  };
 
   timeout = setTimeout(() => {
     // Orange
     light.setColour('orange');
   }, 5000);
+
+  // Police lights
+  policeLight().then(() => {});
 });
 
 ipcMain.on('timer-reset', (event, payload) => {

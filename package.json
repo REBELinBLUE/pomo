@@ -16,6 +16,7 @@
     "dateformat": "^3.0.3",
     "dexie": "^2.0.4",
     "material-icons": "^0.2.3",
+    "noble": "^1.9.1",
     "node-luxafor": "^2.1.0",
     "sweet-modal-vue": "^2.0.0",
     "vue": "^2.5.16",
@@ -23,7 +24,8 @@
     "vue-radial-progress": "^0.2.10",
     "vue-router": "^3.0.1",
     "vuesax": "^3.1.51",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "xpc-connection": "sandeepmistry/node-xpc-connection#pull/26/head"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0-rc.9",
@@ -40,6 +42,9 @@
     "sass-loader": "^7.0.1",
     "vue-cli-plugin-electron-builder": "^1.0.0-beta.6",
     "vue-template-compiler": "^2.5.16"
+  },
+  "resolutions": {
+    "xpc-connection": "sandeepmistry/node-xpc-connection#pull/26/head"
   },
   "main": "dist_electron/bundled/background.js",
   "description": "A pomodoro tracker",

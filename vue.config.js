@@ -14,6 +14,7 @@ module.exports = {
         config.externals({
           // 'node-hid': 'commonjs node-hid',
           'node-luxafor': 'commonjs node-luxafor',
+          noble: 'commonjs noble',
         });
 
         return config;

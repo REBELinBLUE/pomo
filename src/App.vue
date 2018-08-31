@@ -17,6 +17,8 @@
 
 <script>
 import { ipcRenderer } from 'electron'; // eslint-disable-line
+import { mapMutations, mapState } from 'vuex';
+import { DEVICE_DISCOVERED, DEVICE_CONNECTED, DEVICE_DISCONNECTED } from '@/store/constants';
 import Icon from '@/components/Icon.vue';
 import Timer from '@/components/Timer.vue';
 
@@ -26,8 +28,26 @@ export default {
     Icon,
     Timer,
   },
+  computed: mapState({
+    device: state => state.settings.device,
+  }),
+  created() {
+    ipcRenderer.on('device-discovered', (event, devices) => {
+      this.discovered(devices);
+    });
+
+    ipcRenderer.on('device-connected', this.connected);
+    ipcRenderer.on('device-disconnected', this.disconnected);
+
+    ipcRenderer.send('device-paired', this.device);
+  },
   methods: {
-    started(payload) { // FIXME: Figure out some way to not include these when running outside of electron
+    ...mapMutations({
+      connected: DEVICE_CONNECTED,
+      disconnected: DEVICE_DISCONNECTED,
+      discovered: DEVICE_DISCOVERED,
+    }),
+    started(payload) {
       ipcRenderer.send('timer-started', payload);
     },
     progress(payload) {
@@ -134,6 +154,10 @@ button {
   -webkit-user-select: none;
   user-select: none;
   cursor: default;
+}
+
+button span, button i {
+  cursor: pointer;
 }
 
 input, button, textarea, :focus {

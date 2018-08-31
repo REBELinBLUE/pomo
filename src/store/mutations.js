@@ -9,9 +9,53 @@ import {
   TIMER_TICK,
   TIMER_RESET,
   TIMER_PAUSE,
+  DEVICE_CONNECTED,
+  DEVICE_DISCONNECTED,
+  DEVICE_DISCOVERED,
+  DEVICE_PAIRED,
+  DEVICE_UNPAIRED,
 } from './constants';
 
 export default {
+  [DEVICE_CONNECTED](state) {
+    state.light = {
+      devices: {},
+      connected: true,
+    };
+  },
+
+  [DEVICE_DISCONNECTED](state) {
+    state.light = {
+      devices: {},
+      connected: false,
+    };
+  },
+
+  [DEVICE_DISCOVERED](state, devices) {
+    state.light = {
+      devices,
+      connected: false,
+    };
+  },
+
+  [DEVICE_PAIRED](state, device) {
+    state.settings.device = device;
+
+    state.light = {
+      ...state.light,
+      devices: {},
+    };
+  },
+
+  [DEVICE_UNPAIRED](state) {
+    state.settings.device = null;
+
+    state.light = {
+      connected: false,
+      devices: {},
+    };
+  },
+
   [TIMER_RESET](state, payload) {
     state.timer = {
       ...state.timer,
