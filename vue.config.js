@@ -15,6 +15,7 @@ module.exports = {
           // 'node-hid': 'commonjs node-hid',
           'node-luxafor': 'commonjs node-luxafor',
           noble: 'commonjs noble',
+          '@s524797336/noble-mac': 'commonjs @s524797336/noble-mac',
         });
 
         return config;

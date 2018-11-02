@@ -1,4 +1,4 @@
-const noble = require('noble');
+const noble = require('@s524797336/noble-mac');
 const { EventEmitter } = require('events');
 
 const SERVICE_UUID = '6e400001b5a3f393e0a9e50e24dcca9e';
@@ -51,8 +51,9 @@ class PomoLight extends EventEmitter {
   startScanning() {
     // FIXME: Should be able to supply the UUID here but for some reason it isn't working
     noble.startScanning(
-      [], // [this.serviceUUID],
-      true,
+      [], //
+      // [this.serviceUUID],
+      false,
     );
   }
 
@@ -80,7 +81,8 @@ class PomoLight extends EventEmitter {
 
       // FIXME: Should be able to supply the UUID here but for some reason it isn't working
       peripheral.discoverSomeServicesAndCharacteristics(
-        [], // [this.serviceUUID],
+        [],
+        // [this.serviceUUID],
         [this.writeUUID],
         (err, services, characteristics) => {
           if (characteristics.length === 1) {
@@ -108,7 +110,7 @@ class PomoLight extends EventEmitter {
 
   changeColour(red, green, blue) {
     if (this.connected) {
-      this.stream.write(Buffer.from([0, red, green, blue]));
+      this.stream.write(Buffer.from([0, red, green, blue]), true);
 
       return true;
     }

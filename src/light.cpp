@@ -7,8 +7,8 @@
 #define DEVICE_NAME "Pomo Light #1"
 
 #define RED_PIN 5
-#define GREEN_PIN 18
-#define BLUE_PIN 19
+#define GREEN_PIN 21
+#define BLUE_PIN 23
 
 typedef struct {
     uint8_t red;

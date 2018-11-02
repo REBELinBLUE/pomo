@@ -13,6 +13,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@s524797336/noble-mac": "0.0.10",
     "dateformat": "^3.0.3",
     "dexie": "^2.0.4",
     "material-icons": "^0.2.3",
