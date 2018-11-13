@@ -102,7 +102,7 @@ app.on('ready', async () => {
 
   light.on('connected', async () => {
     mainWindow.webContents.send('device-connected');
-    light.setColour('orange');
+    light.setColour('blue');
   });
 
   light.on('disconnected', () => {
@@ -144,7 +144,7 @@ ipcMain.on('timer-started', (event, payload) => {
 });
 
 ipcMain.on('timer-skipped', () => {
-  light.setColour('orange');
+  light.setColour('blue');
 });
 
 ipcMain.on('timer-interrupted', () => {
@@ -159,12 +159,12 @@ ipcMain.on('timer-interrupted', () => {
     }
     /* eslint-enable no-await-in-loop */
 
-    light.setColour('orange');
+    light.setColour('blue');
   };
 
   timeout = setTimeout(() => {
     // Orange
-    light.setColour('orange');
+    light.setColour('blue');
   }, 5000);
 
   // Police lights
@@ -182,7 +182,7 @@ ipcMain.on('timer-progress', (event, payload) => {
 });
 
 ipcMain.on('timer-stopped', (event, payload) => {
-  light.setColour('orange');
+  light.setColour('blue');
 
   let title = 'It\'s time to get back to work!';
   let body = '🔥🔥🔥🔥🔥🔥';
