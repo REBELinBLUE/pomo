@@ -51,9 +51,9 @@ class PomoLight extends EventEmitter {
   startScanning() {
     // FIXME: Should be able to supply the UUID here but for some reason it isn't working
     noble.startScanning(
-      [], //
-      // [this.serviceUUID],
-      false,
+      // [],
+      [this.serviceUUID],
+      true,
     );
   }
 
@@ -81,8 +81,8 @@ class PomoLight extends EventEmitter {
 
       // FIXME: Should be able to supply the UUID here but for some reason it isn't working
       peripheral.discoverSomeServicesAndCharacteristics(
-        [],
-        // [this.serviceUUID],
+        // [],
+        [this.serviceUUID],
         [this.writeUUID],
         (err, services, characteristics) => {
           if (characteristics.length === 1) {
