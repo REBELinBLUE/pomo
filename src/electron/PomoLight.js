@@ -133,7 +133,7 @@ class PomoLight extends EventEmitter {
 
       this.peripheral.disconnect();
     }
-op
+
     this.reset();
   }
 
